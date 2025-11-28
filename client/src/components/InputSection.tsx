@@ -17,6 +17,7 @@ export const InputSection: React.FC = () => {
   const [uploadStatus, setUploadStatus] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
+  const [uploadedFilePath, setUploadedFilePath] = useState<string | null>(null)
 
   // Simulate progress
   React.useEffect(() => {
@@ -41,6 +42,7 @@ export const InputSection: React.FC = () => {
       setIsUploading(true)
       setUploadStatus(null)
       setErrorMessage(null)
+      setUploadedFilePath(null)
       const formData = new FormData()
       formData.append('file', file)
 
@@ -54,7 +56,7 @@ export const InputSection: React.FC = () => {
           const data = await response.json()
           console.log('Upload success:', data)
           setUploadStatus('Upload successful!')
-          // TODO: Trigger processing
+          setUploadedFilePath(data.filePath)
         } else {
           console.error('Upload failed')
           setUploadStatus('Upload failed.')
@@ -67,6 +69,38 @@ export const InputSection: React.FC = () => {
       } finally {
         setIsUploading(false)
       }
+    }
+  }
+
+
+  const handleFileProcess = async () => {
+    if (!uploadedFilePath) return
+
+    setIsUploading(true)
+    setErrorMessage(null)
+    try {
+      const response = await fetch('http://localhost:3000/api/process', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ filePath: uploadedFilePath }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log('Processing success:', data)
+        dispatch(setMeetingData(data))
+      } else {
+        console.error('Processing failed')
+        const errorData = await response.json()
+        setErrorMessage(errorData.error || "Processing failed")
+      }
+    } catch (error) {
+      console.error('Error processing file:', error)
+      setErrorMessage("Error processing file")
+    } finally {
+      setIsUploading(false)
     }
   }
 
@@ -149,6 +183,11 @@ export const InputSection: React.FC = () => {
                 <div className="mt-4 w-full p-3 text-sm text-red-500 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md text-center">
                   {errorMessage}
                 </div>
+              )}
+              {uploadedFilePath && !isUploading && (
+                <Button onClick={handleFileProcess} className="mt-4 w-full">
+                  Process Uploaded File
+                </Button>
               )}
             </CardContent>
           </Card>
