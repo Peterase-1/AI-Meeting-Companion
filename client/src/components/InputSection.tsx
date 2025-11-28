@@ -336,6 +336,13 @@ export const InputSection: React.FC = () => {
                 </Button>
               )}
 
+              {isUploading && (
+                <div className="w-full space-y-2 mt-4">
+                  <p className="text-sm text-center text-muted-foreground">Processing...</p>
+                  <Progress value={progress} className="w-full" />
+                </div>
+              )}
+
               {errorMessage && (
                 <div className="w-full p-3 text-sm text-red-500 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md text-center">
                   {errorMessage}
