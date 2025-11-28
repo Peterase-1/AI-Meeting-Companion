@@ -10,6 +10,13 @@ import { Upload, Mic, Link, Loader2 } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { setMeetingData } from '@/features/meetingSlice'
 
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
 export const InputSection: React.FC = () => {
   const dispatch = useDispatch()
   const [textInput, setTextInput] = useState('')
@@ -18,6 +25,11 @@ export const InputSection: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
   const [uploadedFilePath, setUploadedFilePath] = useState<string | null>(null)
+
+  // Live Recording State
+  const [isRecording, setIsRecording] = useState(false)
+  const [liveTranscript, setLiveTranscript] = useState('')
+  const recognitionRef = React.useRef<any>(null)
 
   // Simulate progress
   React.useEffect(() => {
@@ -105,7 +117,8 @@ export const InputSection: React.FC = () => {
   }
 
   const handleTextSubmit = async () => {
-    if (!textInput.trim()) return
+    const textToProcess = textInput.trim() || liveTranscript.trim()
+    if (!textToProcess) return
 
     setIsUploading(true)
     setErrorMessage(null)
@@ -115,7 +128,7 @@ export const InputSection: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ transcript: textInput }),
+        body: JSON.stringify({ transcript: textToProcess }),
       })
 
       if (response.ok) {
@@ -131,6 +144,58 @@ export const InputSection: React.FC = () => {
       console.error('Error processing text:', error)
     } finally {
       setIsUploading(false)
+    }
+  }
+
+  const toggleRecording = () => {
+    if (isRecording) {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop()
+      }
+      setIsRecording(false)
+    } else {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+      if (!SpeechRecognition) {
+        setErrorMessage("Your browser does not support Speech Recognition.")
+        return
+      }
+
+      const recognition = new SpeechRecognition()
+      recognition.continuous = true
+      recognition.interimResults = true
+      recognition.lang = 'en-US'
+
+      recognition.onstart = () => {
+        console.log("Recording started")
+        setIsRecording(true)
+        setErrorMessage(null)
+      }
+
+      recognition.onerror = (event: any) => {
+        console.error("Speech recognition error", event.error)
+        setErrorMessage(`Error: ${event.error}`)
+        setIsRecording(false)
+      }
+
+      recognition.onend = () => {
+        console.log("Recording ended")
+        setIsRecording(false)
+      }
+
+      recognition.onresult = (event: any) => {
+        let finalTranscript = ''
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript + ' '
+          }
+        }
+        if (finalTranscript) {
+          setLiveTranscript(prev => prev + finalTranscript)
+        }
+      }
+
+      recognitionRef.current = recognition
+      recognition.start()
     }
   }
 
@@ -241,18 +306,44 @@ export const InputSection: React.FC = () => {
                 <Link className="h-4 w-4 opacity-50" />
                 <Input placeholder="Zoom/Teams Transcript URL (Optional)" />
               </div>
-              <div className="flex justify-center p-8">
-                <Button variant="secondary" className="h-24 w-24 rounded-full">
-                  <Mic className="h-10 w-10" />
-                </Button>
+
+              <div className="flex flex-col items-center justify-center p-4">
+                <div className={`relative flex items-center justify-center h-32 w-32 rounded-full transition-all duration-500 ${isRecording ? 'bg-red-100 dark:bg-red-900/30 animate-pulse' : 'bg-secondary'}`}>
+                  <Button
+                    variant={isRecording ? "destructive" : "secondary"}
+                    className={`h-24 w-24 rounded-full z-10 transition-all duration-300 ${isRecording ? 'scale-110' : ''}`}
+                    onClick={toggleRecording}
+                  >
+                    <Mic className={`h-10 w-10 ${isRecording ? 'animate-bounce' : ''}`} />
+                  </Button>
+                  {isRecording && (
+                    <span className="absolute -bottom-8 text-xs font-medium text-red-500 animate-pulse">Recording...</span>
+                  )}
+                </div>
               </div>
-              <p className="text-center text-sm text-muted-foreground">
-                Click to start listening (Browser Speech API)
-              </p>
+
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-muted-foreground">Live Transcript:</p>
+                <div className="min-h-[150px] max-h-[300px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm overflow-y-auto">
+                  {liveTranscript || <span className="text-muted-foreground italic">Transcript will appear here...</span>}
+                </div>
+              </div>
+
+              {liveTranscript && !isRecording && (
+                <Button onClick={handleTextSubmit} className="w-full">
+                  Process Recording
+                </Button>
+              )}
+
+              {errorMessage && (
+                <div className="w-full p-3 text-sm text-red-500 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md text-center">
+                  {errorMessage}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
-    </div >
+    </div>
   )
 }
