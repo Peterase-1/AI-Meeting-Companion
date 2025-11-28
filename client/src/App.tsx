@@ -1,5 +1,6 @@
 import { Layout } from './components/Layout'
 import { InputSection } from './components/InputSection'
+import { OutputSection } from './components/OutputSection'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         </p>
       </div>
       <InputSection />
+      <OutputSection />
     </Layout>
   )
 }

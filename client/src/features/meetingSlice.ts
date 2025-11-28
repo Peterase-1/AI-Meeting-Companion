@@ -3,14 +3,32 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface MeetingState {
   transcript: string
-  summary: string
-  actionItems: any[]
+  summary: {
+    short: string
+    long: string
+  }
+  actionItems: Array<{
+    who: string
+    what: string
+    dueDate: string | null
+    priority: 'High' | 'Medium' | 'Low'
+  }>
+  decisions: string[]
+  attendees: Array<{ name: string; role: string }>
+  sentiment: {
+    sentiment: string
+    tone: string
+    highlights: string[]
+  }
 }
 
 const initialState: MeetingState = {
   transcript: '',
-  summary: '',
+  summary: { short: '', long: '' },
   actionItems: [],
+  decisions: [],
+  attendees: [],
+  sentiment: { sentiment: '', tone: '', highlights: [] },
 }
 
 export const meetingSlice = createSlice({
@@ -20,11 +38,11 @@ export const meetingSlice = createSlice({
     setTranscript: (state, action: PayloadAction<string>) => {
       state.transcript = action.payload
     },
-    setSummary: (state, action: PayloadAction<string>) => {
-      state.summary = action.payload
+    setMeetingData: (state, action: PayloadAction<Partial<MeetingState>>) => {
+      return { ...state, ...action.payload }
     },
   },
 })
 
-export const { setTranscript, setSummary } = meetingSlice.actions
+export const { setTranscript, setMeetingData } = meetingSlice.actions
 export default meetingSlice.reducer

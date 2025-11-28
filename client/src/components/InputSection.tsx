@@ -6,7 +6,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Upload, Mic, Link, Loader2 } from 'lucide-react'
 
+import { useDispatch } from 'react-redux'
+import { setMeetingData } from '@/features/meetingSlice'
+
 export const InputSection: React.FC = () => {
+  const dispatch = useDispatch()
   const [textInput, setTextInput] = useState('')
   const [isUploading, setIsUploading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState<string | null>(null)
@@ -59,7 +63,7 @@ export const InputSection: React.FC = () => {
       if (response.ok) {
         const data = await response.json()
         console.log('Processing success:', data)
-        // TODO: Dispatch to Redux
+        dispatch(setMeetingData(data))
       } else {
         console.error('Processing failed')
       }
