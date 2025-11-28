@@ -4,69 +4,74 @@ Transform your meetings with AI-powered summaries, action items, and more.
 
 ![AI Meeting Companion](docs/images/upload-tab.png)
 
-## 🚀 Features
+## Features
 
-AI Meeting Companion is a powerful tool designed to streamline your post-meeting workflow. It leverages advanced AI to process meeting data and extract valuable insights.
+AI Meeting Companion is a comprehensive tool designed to revolutionize how you interact with meeting data. By leveraging advanced Artificial Intelligence, it transforms raw audio and text into actionable insights, saving you time and ensuring no critical detail is missed.
 
-### 1. Flexible Input Methods
-*   **Upload File**: Drag and drop audio files (mp3, m4a) or transcript documents (txt, docx, pdf).
-*   **Paste Text**: Directly paste your meeting notes or raw transcripts for instant processing.
-*   **Live Transcript**: Connect to live meeting feeds (Zoom/Teams) for real-time analysis.
+### 1. Versatile Input Methods
 
-### 2. AI-Powered Analysis
-*   **Smart Summaries**: Get concise summaries of long discussions.
-*   **Action Items**: Automatically extract tasks and assignees.
-*   **Key Topics**: Identify the main themes discussed.
+The application supports multiple ways to input meeting data, catering to different workflows and scenarios:
 
-### 3. Modern & Immersive UI
-*   **Next-Gen Aesthetic**: Glassmorphism design with a premium feel.
-*   **Interactive Background**: Dynamic particle animation that reacts to your cursor.
-*   **Dark/Light Mode**: Seamlessly switch between themes to match your preference.
+*   **File Upload**: Seamlessly upload existing meeting records. The system supports a wide range of formats including audio files (MP3, M4A) for automatic transcription and document files (TXT, DOCX, PDF) for direct analysis.
+*   **Paste Text**: For quick processing of existing notes or clipboard content, simply paste your text directly into the application. This is ideal for processing email threads or manual meeting minutes.
+*   **Live Audio Recording**: Capture meetings in real-time using the built-in microphone integration. Powered by the Web Speech API, this feature provides instant transcription as you speak, allowing you to focus on the conversation while the app captures the details.
 
-## 📸 Screenshots
+### 2. Intelligent AI Analysis
 
-### Upload Meeting Data
-Easily upload your meeting files.
-![Upload Tab](docs/images/upload-tab.png)
+Once data is ingested, our powerful AI engine breaks it down to provide deep understanding and clarity:
 
-### Paste Transcript
-Quickly paste text for analysis.
-![Paste Text Tab](docs/images/paste-tab.png)
+*   **Smart Summarization**: Condenses long discussions into concise, readable summaries. It identifies the core narrative of the meeting, allowing you to grasp the essence of hour-long calls in minutes.
+*   **Action Item Extraction**: Automatically identifies tasks, assignments, and deadlines mentioned during the meeting. It creates a structured list of "Who needs to do What," ensuring accountability and follow-through.
+*   **Key Decision Tracking**: Highlights critical decisions made during the session. This feature separates agreed-upon outcomes from general discussion, providing a clear record of consensus.
+*   **Sentiment & Tone Analysis**: Analyzes the emotional undertone of the meeting. It can detect whether the conversation was positive, neutral, or concerned, giving you insights into team morale and client satisfaction.
 
-### Live Transcript
-Connect to live meetings.
-![Live Transcript Tab](docs/images/live-tab.png)
+### 3. Modern & Immersive User Experience
 
-## 🛠️ Tech Stack
+The application is built with a focus on aesthetics and usability, ensuring a premium experience:
 
-*   **Frontend**: React, TypeScript, Vite, Tailwind CSS, Framer Motion
-*   **Backend**: Node.js, Express
-*   **Styling**: Shadcn UI, Lucide React, Google Fonts (Outfit)
-*   **Animation**: HTML5 Canvas (Interactive Background)
+*   **Interactive Particle Background**: A dynamic, cursor-reactive background adds a layer of visual depth and engagement without distracting from the content.
+*   **Adaptive Theme System**: Fully supports both Dark and Light modes. The interface automatically adjusts colors, contrast, and visual elements to provide optimal readability in any lighting condition.
+*   **Responsive Design**: Whether you are on a large desktop monitor or a laptop, the layout adapts fluidly to ensure all information is accessible and well-organized.
 
-## 🏁 Getting Started
+## Tech Stack
 
-Follow these steps to set up the project locally.
+This project is built using a robust modern technology stack to ensure performance, scalability, and maintainability:
+
+*   **Frontend Framework**: React with TypeScript for type-safe, component-based UI development.
+*   **Build Tool**: Vite for lightning-fast development server start-up and optimized production builds.
+*   **Styling**: Tailwind CSS for utility-first styling, combined with Shadcn UI for accessible, pre-built components.
+*   **State Management**: Redux Toolkit for efficient global state management across the application.
+*   **Backend Runtime**: Node.js environment.
+*   **API Server**: Express.js for handling API requests and file processing.
+*   **AI Integration**: Integration with advanced LLMs (Large Language Models) for text processing and analysis.
+
+## Getting Started
+
+Follow these instructions to set up the project on your local machine for development and testing purposes.
 
 ### Prerequisites
+
+Ensure you have the following installed on your system:
 *   Node.js (v16 or higher)
-*   npm or yarn
+*   npm (Node Package Manager)
 
-### Installation
+### Installation Guide
 
-1.  **Clone the repository**
+1.  **Clone the Repository**
     ```bash
     git clone <repository-url>
     cd ai-meeting-companion
     ```
 
 2.  **Install Server Dependencies**
+    Navigate to the server directory and install the necessary packages:
     ```bash
     cd server
     npm install
     ```
 
 3.  **Install Client Dependencies**
+    Navigate to the client directory and install the frontend packages:
     ```bash
     cd ../client
     npm install
@@ -74,20 +79,25 @@ Follow these steps to set up the project locally.
 
 ### Running the Application
 
-1.  **Start the Server**
+To run the full application, you will need to start both the backend server and the frontend client.
+
+1.  **Start the Backend Server**
+    In the `server` directory, run:
     ```bash
-    # In the server directory
     npm start
     ```
+    The server will start, typically on port 3000.
 
-2.  **Start the Client**
+2.  **Start the Frontend Client**
+    In the `client` directory, run:
     ```bash
-    # In the client directory
     npm run dev
     ```
+    The client development server will start.
 
-3.  Open your browser and navigate to `http://localhost:5173`.
+3.  **Access the Application**
+    Open your web browser and navigate to the URL provided by Vite (usually `http://localhost:5173`).
 
-## 📄 License
+## License
 
 © 2025 AI Meeting Companion. All rights reserved.
