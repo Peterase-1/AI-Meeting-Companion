@@ -26,7 +26,41 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+import { analyzeMeeting } from "./services/aiService";
+
+// ... existing imports
+
+app.post("/api/process", async (req, res) => {
+  const { transcript, filePath } = req.body;
+
+  if (!transcript && !filePath) {
+    return res.status(400).send("No transcript or file provided.");
+  }
+
+  try {
+    let textToProcess = transcript;
+
+    if (filePath) {
+      // TODO: Implement file reading/transcription (e.g., using Whisper or simple text read)
+      // For now, assuming text files or just reading the file content if it's text
+      if (filePath.endsWith('.txt')) {
+        textToProcess = fs.readFileSync(filePath, 'utf-8');
+      } else {
+        // Placeholder for audio transcription
+        return res.status(501).send("Audio transcription not yet implemented. Please upload a text file or paste transcript.");
+      }
+    }
+
+    const result = await analyzeMeeting(textToProcess);
+    res.json(result);
+  } catch (error) {
+    console.error("Processing error:", error);
+    res.status(500).send("Error processing meeting data");
+  }
+});
+
 app.post("/api/upload", upload.single("file"), (req, res) => {
+  // ... existing upload handler
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }

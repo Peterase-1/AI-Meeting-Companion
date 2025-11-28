@@ -43,9 +43,31 @@ export const InputSection: React.FC = () => {
     }
   }
 
-  const handleTextSubmit = () => {
-    console.log('Text submitted:', textInput)
-    // TODO: Handle text submission logic
+  const handleTextSubmit = async () => {
+    if (!textInput.trim()) return
+
+    setIsUploading(true)
+    try {
+      const response = await fetch('http://localhost:3000/api/process', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ transcript: textInput }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log('Processing success:', data)
+        // TODO: Dispatch to Redux
+      } else {
+        console.error('Processing failed')
+      }
+    } catch (error) {
+      console.error('Error processing text:', error)
+    } finally {
+      setIsUploading(false)
+    }
   }
 
   return (
