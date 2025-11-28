@@ -1,10 +1,12 @@
 import { Layout } from './components/Layout'
 import { InputSection } from './components/InputSection'
 import { OutputSection } from './components/OutputSection'
+import { CanvasBackground } from './components/InteractiveBackground'
 
 function App() {
   return (
     <Layout>
+      <CanvasBackground />
       <div className="flex flex-col items-center justify-center space-y-4 text-center mb-8">
         <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
           AI Meeting Companion
