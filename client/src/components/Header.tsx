@@ -3,9 +3,12 @@ import React from 'react'
 import { useTheme } from "@/components/theme-provider"
 import { ModeToggle } from "@/components/mode-toggle"
 
+import logoDark from "@/assets/logo-dark.png"
+import logoLight from "@/assets/logo.png"
+
 export const Header: React.FC = () => {
   const { theme } = useTheme()
-  const logoSrc = theme === "dark" ? "/src/assets/logo-dark.png" : "/src/assets/logo.png"
+  const logoSrc = theme === "dark" ? logoDark : logoLight
 
   return (
     <header className="sticky top-0 z-50 w-full">

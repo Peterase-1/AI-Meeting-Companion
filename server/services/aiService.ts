@@ -12,7 +12,7 @@ export const analyzeMeeting = async (transcript: string) => {
   try {
     // Phase 1: Deep Analysis (Summary, Action Items, Decisions)
     const analysisCompletion = await openai.chat.completions.create({
-      model: "google/gemini-2.0-flash-lite-preview-02-05:free",
+      model: "google/gemini-2.0-flash-exp:free",
       messages: [
         {
           role: "system",
