@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { getApiUrl } from '@/lib/api'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -59,7 +60,7 @@ export const InputSection: React.FC = () => {
       formData.append('file', file)
 
       try {
-        const response = await fetch('http://localhost:3000/api/upload', {
+        const response = await fetch(`${getApiUrl()}/api/upload`, {
           method: 'POST',
           body: formData,
         })
@@ -91,7 +92,7 @@ export const InputSection: React.FC = () => {
     setIsUploading(true)
     setErrorMessage(null)
     try {
-      const response = await fetch('http://localhost:3000/api/process', {
+      const response = await fetch(`${getApiUrl()}/api/process`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -123,7 +124,7 @@ export const InputSection: React.FC = () => {
     setIsUploading(true)
     setErrorMessage(null)
     try {
-      const response = await fetch('http://localhost:3000/api/process', {
+      const response = await fetch(`${getApiUrl()}/api/process`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

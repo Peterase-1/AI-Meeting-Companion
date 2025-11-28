@@ -7,12 +7,16 @@ import { Provider } from 'react-redux'
 
 import { ThemeProvider } from "@/components/theme-provider"
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <Provider store={store}>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <App />
-      </ThemeProvider>
-    </Provider>
-  </StrictMode>,
-)
+import { initializeApi } from '@/lib/api'
+
+initializeApi().then(() => {
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <Provider store={store}>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+          <App />
+        </ThemeProvider>
+      </Provider>
+    </StrictMode>,
+  )
+})
