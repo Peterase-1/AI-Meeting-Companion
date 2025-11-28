@@ -56,9 +56,13 @@ app.post("/api/process", async (req, res) => {
 
     const result = await analyzeMeeting(textToProcess);
     res.json(result);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Processing error:", error);
-    res.status(500).send("Error processing meeting data");
+
+    const statusCode = error.status || 500;
+    const message = error.message || "Error processing meeting data";
+
+    res.status(statusCode).json({ error: message });
   }
 });
 

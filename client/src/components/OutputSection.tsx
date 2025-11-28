@@ -8,7 +8,9 @@ import { Badge } from '@/components/ui/badge'
 export const OutputSection: React.FC = () => {
   const meeting = useSelector((state: RootState) => state.meeting)
 
-  if (!meeting.summary.short) {
+  const hasData = meeting.summary.short || meeting.sentiment.sentiment || meeting.actionItems.length > 0 || meeting.decisions.length > 0
+
+  if (!hasData) {
     return null
   }
 

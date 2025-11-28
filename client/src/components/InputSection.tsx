@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
+import { Progress } from '@/components/ui/progress'
 import { Upload, Mic, Link, Loader2 } from 'lucide-react'
 
 import { useDispatch } from 'react-redux'
@@ -14,12 +15,32 @@ export const InputSection: React.FC = () => {
   const [textInput, setTextInput] = useState('')
   const [isUploading, setIsUploading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [progress, setProgress] = useState(0)
+
+  // Simulate progress
+  React.useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (isUploading) {
+      setProgress(0)
+      interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 90) return prev
+          return prev + 10
+        })
+      }, 500)
+    } else {
+      setProgress(100)
+    }
+    return () => clearInterval(interval)
+  }, [isUploading])
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
       setIsUploading(true)
       setUploadStatus(null)
+      setErrorMessage(null)
       const formData = new FormData()
       formData.append('file', file)
 
@@ -37,6 +58,8 @@ export const InputSection: React.FC = () => {
         } else {
           console.error('Upload failed')
           setUploadStatus('Upload failed.')
+          const errorData = await response.json()
+          setErrorMessage(errorData.error || "Upload failed")
         }
       } catch (error) {
         console.error('Error uploading file:', error)
@@ -51,6 +74,7 @@ export const InputSection: React.FC = () => {
     if (!textInput.trim()) return
 
     setIsUploading(true)
+    setErrorMessage(null)
     try {
       const response = await fetch('http://localhost:3000/api/process', {
         method: 'POST',
@@ -66,6 +90,8 @@ export const InputSection: React.FC = () => {
         dispatch(setMeetingData(data))
       } else {
         console.error('Processing failed')
+        const errorData = await response.json()
+        setErrorMessage(errorData.error || "Processing failed")
       }
     } catch (error) {
       console.error('Error processing text:', error)
@@ -98,8 +124,11 @@ export const InputSection: React.FC = () => {
                 <Upload className="h-10 w-10 text-muted-foreground mb-4" />
               )}
               <p className="text-sm text-muted-foreground mb-4">
-                {isUploading ? 'Uploading...' : 'Drag and drop or click to upload'}
+                {isUploading ? 'Processing...' : 'Drag and drop or click to upload'}
               </p>
+              {isUploading && (
+                <Progress value={progress} className="w-[60%] mb-4" />
+              )}
               <Input
                 type="file"
                 className="hidden"
@@ -115,6 +144,11 @@ export const InputSection: React.FC = () => {
               </Button>
               {uploadStatus && (
                 <p className="mt-4 text-sm font-medium text-primary">{uploadStatus}</p>
+              )}
+              {errorMessage && (
+                <div className="mt-4 w-full p-3 text-sm text-red-500 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md text-center">
+                  {errorMessage}
+                </div>
               )}
             </CardContent>
           </Card>
@@ -136,7 +170,18 @@ export const InputSection: React.FC = () => {
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setTextInput(e.target.value)}
               />
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex-col space-y-4">
+              {isUploading && (
+                <div className="w-full space-y-2">
+                  <p className="text-sm text-center text-muted-foreground">Processing...</p>
+                  <Progress value={progress} className="w-full" />
+                </div>
+              )}
+              {errorMessage && (
+                <div className="w-full p-3 text-sm text-red-500 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+                  {errorMessage}
+                </div>
+              )}
               <Button onClick={handleTextSubmit} className="w-full">
                 Process Text
               </Button>
@@ -169,6 +214,6 @@ export const InputSection: React.FC = () => {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </div >
   )
 }
