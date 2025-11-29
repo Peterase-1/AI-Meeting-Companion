@@ -130,7 +130,7 @@ app.post("/api/upload", upload.single("file"), async (req, res) => {
     res.json({ message: "File uploaded successfully", filePath: data.url, filename: req.file.originalname });
   } catch (error) {
     console.error("FileStack upload error:", error);
-    res.status(500).send("Error uploading file to storage.");
+    res.status(500).json({ error: "Error uploading file to storage." });
   }
 });
 
