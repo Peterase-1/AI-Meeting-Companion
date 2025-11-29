@@ -4,6 +4,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import dotenv from "dotenv";
+import { analyzeMeeting } from "./services/aiService";
 
 dotenv.config();
 
@@ -46,10 +47,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-import { analyzeMeeting } from "./services/aiService";
-
-// ... existing imports
-
 app.post("/api/process", async (req, res) => {
   const { transcript, filePath } = req.body;
 
@@ -61,13 +58,24 @@ app.post("/api/process", async (req, res) => {
     let textToProcess = transcript;
 
     if (filePath) {
-      // TODO: Implement file reading/transcription (e.g., using Whisper or simple text read)
-      // For now, assuming text files or just reading the file content if it's text
-      if (filePath.endsWith('.txt')) {
-        textToProcess = fs.readFileSync(filePath, 'utf-8');
+      // Check if it's a remote URL (FileStack)
+      if (filePath.startsWith('http')) {
+        const response = await fetch(filePath);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch file from URL: ${response.statusText}`);
+        }
+        textToProcess = await response.text();
+      }
+      // Fallback to local file system (legacy support or if upload failed to FileStack but saved locally)
+      else if (fs.existsSync(filePath)) {
+        if (filePath.endsWith('.txt')) {
+          textToProcess = fs.readFileSync(filePath, 'utf-8');
+        } else {
+          // Placeholder for audio transcription
+          return res.status(501).send("Audio transcription not yet implemented. Please upload a text file or paste transcript.");
+        }
       } else {
-        // Placeholder for audio transcription
-        return res.status(501).send("Audio transcription not yet implemented. Please upload a text file or paste transcript.");
+        return res.status(404).send("File not found.");
       }
     }
 
@@ -83,13 +91,47 @@ app.post("/api/process", async (req, res) => {
   }
 });
 
-app.post("/api/upload", upload.single("file"), (req, res) => {
-  // ... existing upload handler
+app.post("/api/upload", upload.single("file"), async (req, res) => {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
-  console.log("File uploaded:", req.file.path);
-  res.json({ message: "File uploaded successfully", filePath: req.file.path });
+
+  try {
+    console.log("File uploaded locally:", req.file.path);
+
+    // Upload to FileStack via REST API
+    const fileBuffer = fs.readFileSync(req.file.path);
+    const apiKey = process.env.FILESTACK_API_KEY;
+    if (!apiKey) {
+      throw new Error("FileStack API key not configured.");
+    }
+
+    const response = await fetch(`https://www.filestackapi.com/api/store/S3?key=${apiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': req.file.mimetype
+      },
+      body: fileBuffer
+    });
+
+    if (!response.ok) {
+      throw new Error(`FileStack API error: ${response.statusText}`);
+    }
+
+    const data = await response.json() as any;
+    console.log("File uploaded to FileStack:", data);
+
+    // Delete local file
+    fs.unlink(req.file.path, (err) => {
+      if (err) console.error("Error deleting local file:", err);
+      else console.log("Local file deleted.");
+    });
+
+    res.json({ message: "File uploaded successfully", filePath: data.url, filename: req.file.originalname });
+  } catch (error) {
+    console.error("FileStack upload error:", error);
+    res.status(500).send("Error uploading file to storage.");
+  }
 });
 
 app.get("/", (req, res) => {
