@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface MeetingState {
+  id?: string
   transcript: string
   summary: {
     short: string
@@ -19,6 +20,20 @@ export interface MeetingState {
     sentiment: string
     tone: string
     highlights: string[]
+  }
+  actionPlan?: {
+    goals: string[]
+    tasks: Array<{
+      description: string
+      owner: string
+      deadline: string
+      priority: string
+      status: string
+    }>
+    timeline: Array<{
+      milestone: string
+      date: string
+    }>
   }
 }
 
