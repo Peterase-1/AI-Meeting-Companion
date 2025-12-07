@@ -4,6 +4,11 @@ import type { RootState } from '@/store'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
+import { User, Calendar } from 'lucide-react'
+import { ActionPlanView } from './MeetingFeatures/ActionPlanView'
+import { ChatAssistant } from './MeetingFeatures/ChatAssistant'
+import { TopicClusterMap } from './MeetingFeatures/TopicClusterMap'
+import { DocExport } from './MeetingFeatures/DocExport'
 
 export const OutputSection: React.FC = () => {
   const meeting = useSelector((state: RootState) => state.meeting)
@@ -19,11 +24,15 @@ export const OutputSection: React.FC = () => {
       <h2 className="text-3xl font-bold text-center">Meeting Insights</h2>
 
       <Tabs defaultValue="summary" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-4 md:grid-cols-8">
           <TabsTrigger value="summary">Summary</TabsTrigger>
-          <TabsTrigger value="actions">Action Items</TabsTrigger>
+          <TabsTrigger value="actions">Actions</TabsTrigger>
           <TabsTrigger value="decisions">Decisions</TabsTrigger>
           <TabsTrigger value="sentiment">Sentiment</TabsTrigger>
+          <TabsTrigger value="topics">Topics</TabsTrigger>
+          <TabsTrigger value="plan">Plan</TabsTrigger>
+          <TabsTrigger value="export">Export</TabsTrigger>
+          <TabsTrigger value="chat">Chat</TabsTrigger>
         </TabsList>
 
         <TabsContent value="summary" className="space-y-4">
@@ -53,13 +62,23 @@ export const OutputSection: React.FC = () => {
             <CardContent>
               <div className="space-y-4">
                 {meeting.actionItems.map((item, index) => (
-                  <div key={index} className="flex items-start justify-between p-4 border rounded-lg bg-card/50">
-                    <div>
-                      <p className="font-medium">{item.what}</p>
-                      <p className="text-sm text-muted-foreground">Assignee: {item.who}</p>
-                      {item.dueDate && <p className="text-sm text-muted-foreground">Due: {item.dueDate}</p>}
+                  <div key={index} className="flex flex-col sm:flex-row items-start justify-between p-4 border rounded-lg bg-card/50 hover:bg-card transition-colors gap-4">
+                    <div className="space-y-2">
+                      <p className="font-medium leading-normal">{item.what}</p>
+                      <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <User className="h-3 w-3" />
+                          {item.who}
+                        </span>
+                        {item.dueDate && (
+                          <span className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            {new Date(item.dueDate).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <Badge variant={item.priority === 'High' ? 'destructive' : item.priority === 'Medium' ? 'default' : 'secondary'}>
+                    <Badge variant={item.priority === 'High' ? 'destructive' : item.priority === 'Medium' ? 'default' : 'secondary'} className="flex-shrink-0">
                       {item.priority}
                     </Badge>
                   </div>
@@ -91,11 +110,11 @@ export const OutputSection: React.FC = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 border rounded-lg text-center">
+                <div className="p-4 border rounded-lg text-center bg-muted/20">
                   <p className="text-sm text-muted-foreground">Overall Sentiment</p>
                   <p className="text-2xl font-bold mt-2">{meeting.sentiment.sentiment}</p>
                 </div>
-                <div className="p-4 border rounded-lg text-center">
+                <div className="p-4 border rounded-lg text-center bg-muted/20">
                   <p className="text-sm text-muted-foreground">Tone</p>
                   <p className="text-2xl font-bold mt-2">{meeting.sentiment.tone}</p>
                 </div>
@@ -110,6 +129,46 @@ export const OutputSection: React.FC = () => {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="topics">
+          {meeting.id ? (
+            <TopicClusterMap meetingId={meeting.id} />
+          ) : (
+            <div className="text-center p-8 text-muted-foreground">
+              Please save the meeting to view topics.
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="plan">
+          {meeting.id ? (
+            <ActionPlanView meetingId={meeting.id} initialPlan={meeting.actionPlan} />
+          ) : (
+            <div className="text-center p-8 text-muted-foreground">
+              Please save the meeting to generate an action plan.
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="export">
+          {meeting.id ? (
+            <DocExport meetingId={meeting.id} />
+          ) : (
+            <div className="text-center p-8 text-muted-foreground">
+              Please save the meeting to generate documents.
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="chat">
+          {meeting.id ? (
+            <ChatAssistant meetingId={meeting.id} />
+          ) : (
+            <div className="text-center p-8 text-muted-foreground">
+              Please save the meeting to use the Q&A assistant.
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>
