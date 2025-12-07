@@ -12,7 +12,7 @@ export const analyzeMeeting = async (transcript: string) => {
   try {
     // Phase 1: Deep Analysis (Summary, Action Items, Decisions)
     const analysisCompletion = await openai.chat.completions.create({
-      model: "google/gemini-2.0-flash-exp:free",
+      model: "kwaipilot/kat-coder-pro:free",
       messages: [
         {
           role: "system",
@@ -32,7 +32,13 @@ export const analyzeMeeting = async (transcript: string) => {
       response_format: { type: "json_object" }
     });
 
-    const analysisResult = JSON.parse(analysisCompletion.choices[0].message.content || "{}");
+    const content = analysisCompletion.choices[0].message.content || "{}";
+    console.log("Raw Analysis Response:", content);
+
+    // Clean potential markdown blocks
+    const cleanContent = content.replace(/```json/g, "").replace(/```/g, "").trim();
+
+    const analysisResult = JSON.parse(cleanContent);
 
     // Default structure to ensure frontend doesn't break
     const defaultStructure = {
@@ -46,7 +52,7 @@ export const analyzeMeeting = async (transcript: string) => {
 
     // Phase 2: Fast Insights (Sentiment, Tone)
     const sentimentCompletion = await openai.chat.completions.create({
-      model: "x-ai/grok-4.1-fast:free",
+      model: "kwaipilot/kat-coder-pro:free",
       messages: [
         {
           role: "system",
@@ -79,5 +85,181 @@ export const analyzeMeeting = async (transcript: string) => {
     }
 
     throw { status: 500, message: "Failed to process meeting data" };
+  }
+};
+
+export const generateActionPlan = async (transcript: string) => {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "kwaipilot/kat-coder-pro:free",
+      messages: [
+        {
+          role: "system",
+          content: `You are a project manager expert. Extract a detailed action plan from the meeting transcript.
+          Output JSON format:
+          {
+            "goals": ["Goal 1", "Goal 2"],
+            "tasks": [
+              {
+                "description": "Task description",
+                "owner": "Name or Role",
+                "deadline": "YYYY-MM-DD or 'ASAP'",
+                "priority": "High/Medium/Low",
+                "status": "Pending"
+              }
+            ],
+            "timeline": [
+              { "milestone": "Milestone Name", "date": "Date" }
+            ]
+          }`
+        },
+        {
+          role: "user",
+          content: transcript
+        }
+      ],
+      response_format: { type: "json_object" }
+    });
+
+    return JSON.parse(completion.choices[0].message.content || "{}");
+  } catch (error: any) {
+    console.error("Action Plan Error:", error);
+    throw { status: 500, message: "Failed to generate action plan" };
+  }
+};
+
+export const answerQuestion = async (transcript: string, query: string, history: { role: "user" | "model"; content: string }[] = []) => {
+  try {
+    // transform history to openai format
+    const messages: any[] = [
+      {
+        role: "system",
+        content: `You are a helpful meeting assistant. You answer questions based ONLY on the provided meeting transcript.
+        Transcript: ${transcript}
+        
+        If the answer is not in the transcript, say "I couldn't find that information in the meeting."`
+      }
+    ];
+
+    // Add recent history context (last 5 messages)
+    history.slice(-5).forEach(msg => {
+      messages.push({ role: msg.role === 'model' ? 'assistant' : 'user', content: msg.content });
+    });
+
+    messages.push({ role: "user", content: query });
+
+    const completion = await openai.chat.completions.create({
+      model: "kwaipilot/kat-coder-pro:free",
+      messages: messages,
+    });
+
+    return completion.choices[0].message.content || "I couldn't generate an answer.";
+  } catch (error) {
+    console.error("Q&A Error:", error);
+    throw { status: 500, message: "Failed to answer question" };
+  }
+};
+
+export const clusterTopics = async (transcript: string) => {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "kwaipilot/kat-coder-pro:free",
+      messages: [
+        {
+          role: "system",
+          content: `Analyze the meeting transcript and identify key topics discussed. Group relevant content under each topic.
+          Output JSON format:
+          {
+            "topics": [
+              {
+                "name": "Topic Name (e.g., Budget)",
+                "description": "Brief summary of discussion",
+                "keywords": ["keyword1", "keyword2"]
+              }
+            ]
+          }`
+        },
+        {
+          role: "user",
+          content: transcript
+        }
+      ],
+      response_format: { type: "json_object" }
+    });
+
+    return JSON.parse(completion.choices[0].message.content || "{}");
+  } catch (error: any) {
+    console.error("Topic Cluster Error:", error);
+    throw { status: 500, message: "Failed to cluster topics" };
+  }
+};
+
+export const generateSlideContent = async (transcript: string) => {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "kwaipilot/kat-coder-pro:free",
+      messages: [
+        {
+          role: "system",
+          content: `Create a presentation outline from the meeting transcript.
+          Output JSON format:
+          {
+            "title": "Meeting Title",
+            "slides": [
+              {
+                "title": "Slide Title",
+                "bullets": ["Point 1", "Point 2"],
+                "speakerNotes": "Notes for speaker"
+              }
+            ]
+          }
+          Ensure at least 5 slides covering: Agenda, Key Discussion, Decisions, Action Items, Next Steps.`
+        },
+        {
+          role: "user",
+          content: transcript
+        }
+      ],
+      response_format: { type: "json_object" }
+    });
+
+    return JSON.parse(completion.choices[0].message.content || "{}");
+  } catch (error: any) {
+    console.error("Slide Gen Error:", error);
+    throw { status: 500, message: "Failed to generate slides" };
+  }
+};
+
+export const convertDocument = async (transcript: string, type: string) => {
+  try {
+    const prompts: any = {
+      proposal: "Write a Project Proposal based on this meeting. Include Background, Objectives, Scope, and Timeline.",
+      user_stories: "Generate User Stories with Acceptance Criteria based on requirements discussed.",
+      technical_spec: "Write a Technical Design Document (TDD) based on the discussion, including Architecture, API endpoints if mentioned, and Data Models.",
+      marketing: "Write a Marketing Copy or Blog Post summarizing the key announcements from this meeting.",
+      requirements: "Write a formal Requirements Specification document."
+    };
+
+    const prompt = prompts[type] || "Write a detailed document summarizing the meeting contents.";
+
+    const completion = await openai.chat.completions.create({
+      model: "kwaipilot/kat-coder-pro:free",
+      messages: [
+        {
+          role: "system",
+          content: `You are an expert technical writer. ${prompt}
+          Output the document in Markdown format.`
+        },
+        {
+          role: "user",
+          content: transcript
+        }
+      ]
+    });
+
+    return { content: completion.choices[0].message.content || "Failed to generate content." };
+  } catch (error: any) {
+    console.error("Doc Gen Error:", error);
+    throw { status: 500, message: "Failed to generate document" };
   }
 };

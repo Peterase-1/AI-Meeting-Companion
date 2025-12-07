@@ -5,6 +5,8 @@ import path from "path";
 import fs from "fs";
 import dotenv from "dotenv";
 import { analyzeMeeting } from "./services/aiService";
+import authRoutes from "./routes/authRoutes";
+import meetingRoutes from "./routes/meetingRoutes";
 
 dotenv.config();
 
@@ -30,6 +32,8 @@ app.use(cors({
   }
 }));
 app.use(express.json());
+app.use("/api/auth", authRoutes);
+app.use("/api/meetings", meetingRoutes);
 
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
@@ -138,6 +142,12 @@ app.get("/", (req, res) => {
   res.send("AI Meeting Companion Server is running!");
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+import { fileURLToPath } from "url";
+
+export default app;
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}

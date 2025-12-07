@@ -1,0 +1,81 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  meetings  Meeting[]
+  memories  Memory[]
+}
+
+model Meeting {
+  id          String   @id @default(uuid())
+  userId      String
+  title       String
+  date        DateTime @default(now())
+  duration    Int?     // in seconds
+  transcript  String?  // Large text
+  summary     String?  // Markdown or JSON string
+  actionPlan  Json?    // Structured Action Plan
+  sentiment   String?  // JSON string: { score, label, details }
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id])
+  actionItems ActionItem[]
+  decisions   Decision[]
+  topics      Topic[]
+}
+
+model ActionItem {
+  id          String   @id @default(uuid())
+  meetingId   String
+  description String
+  assignee    String?
+  dueDate     DateTime?
+  priority    String?  // LOW, MEDIUM, HIGH
+  status      String   @default("PENDING") // PENDING, IN_PROGRESS, DONE
+  createdAt   DateTime @default(now())
+
+  meeting     Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+}
+
+model Decision {
+  id          String   @id @default(uuid())
+  meetingId   String
+  description String
+  createdAt   DateTime @default(now())
+
+  meeting     Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+}
+
+model Topic {
+  id          String   @id @default(uuid())
+  meetingId   String
+  name        String
+  content     String?  // Summary or extracted text for this topic
+  createdAt   DateTime @default(now())
+
+  meeting     Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+}
+
+model Memory {
+  id          String   @id @default(uuid())
+  userId      String
+  content     String   // The fact or preference remembered
+  type        String   // PREFERENCE, FACT, CONTEXT
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
