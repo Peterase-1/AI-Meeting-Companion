@@ -8,8 +8,10 @@ import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { Upload, Mic, Link, Loader2 } from 'lucide-react'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setMeetingData } from '@/features/meetingSlice'
+import { useAuthModal } from '@/contexts/AuthModalContext'
+import type { RootState } from '@/store'
 
 declare global {
   interface Window {
@@ -20,6 +22,8 @@ declare global {
 
 export const InputSection: React.FC = () => {
   const dispatch = useDispatch()
+  const { user } = useSelector((state: RootState) => state.auth)
+  const { openModal, setMode } = useAuthModal()
   const [textInput, setTextInput] = useState('')
   const [isUploading, setIsUploading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState<string | null>(null)
@@ -50,6 +54,13 @@ export const InputSection: React.FC = () => {
   }, [isUploading])
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!user) {
+      setMode('login')
+      openModal()
+      // Reset file input value so user can try again
+      event.target.value = ''
+      return
+    }
     const file = event.target.files?.[0]
     if (file) {
       setIsUploading(true)
@@ -118,6 +129,11 @@ export const InputSection: React.FC = () => {
   }
 
   const handleTextSubmit = async () => {
+    if (!user) {
+      setMode('login')
+      openModal()
+      return
+    }
     const textToProcess = textInput.trim() || liveTranscript.trim()
     if (!textToProcess) return
 
