@@ -9,7 +9,7 @@ import { Progress } from '@/components/ui/progress'
 import { Upload, Mic, Link, Loader2 } from 'lucide-react'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { setMeetingData, setTranscript } from '@/features/meetingSlice'
+import { setMeetingData, setTranscript, setFileUrl, resetMeeting } from '@/features/meetingSlice'
 import { useAuthModal } from '@/contexts/AuthModalContext'
 import type { RootState } from '@/store'
 
@@ -81,6 +81,7 @@ export const InputSection: React.FC = () => {
           console.log('Upload success:', data)
           setUploadStatus('Upload successful!')
           setUploadedFilePath(data.filePath)
+          dispatch(setFileUrl(data.filePath))
         } else {
           console.error('Upload failed')
           setUploadStatus('Upload failed.')
@@ -102,6 +103,7 @@ export const InputSection: React.FC = () => {
 
     setIsUploading(true)
     setErrorMessage(null)
+    dispatch(resetMeeting()) // Clear previous results
     try {
       const response = await fetch(`${getApiUrl()}/api/process`, {
         method: 'POST',
@@ -139,6 +141,7 @@ export const InputSection: React.FC = () => {
 
     setIsUploading(true)
     setErrorMessage(null)
+    dispatch(resetMeeting()) // Clear previous results
     try {
       const response = await fetch(`${getApiUrl()}/api/process`, {
         method: 'POST',
@@ -245,7 +248,7 @@ export const InputSection: React.FC = () => {
                 <Upload className="h-10 w-10 text-muted-foreground mb-4" />
               )}
               <p className="text-sm text-muted-foreground mb-4">
-                {isUploading ? 'Processing...' : 'Drag and drop or click to upload'}
+                {isUploading ? (uploadedFilePath ? 'Processing with AI...' : 'Uploading File...') : 'Drag and drop or click to upload'}
               </p>
               {isUploading && (
                 <Progress value={progress} className="w-[60%] mb-4" />
@@ -299,7 +302,7 @@ export const InputSection: React.FC = () => {
             <CardFooter className="flex-col space-y-4">
               {isUploading && (
                 <div className="w-full space-y-2">
-                  <p className="text-sm text-center text-muted-foreground">Processing...</p>
+                  <p className="text-sm text-center text-muted-foreground">Processing with AI...</p>
                   <Progress value={progress} className="w-full" />
                 </div>
               )}
@@ -359,7 +362,7 @@ export const InputSection: React.FC = () => {
 
               {isUploading && (
                 <div className="w-full space-y-2 mt-4">
-                  <p className="text-sm text-center text-muted-foreground">Processing...</p>
+                  <p className="text-sm text-center text-muted-foreground">Processing with AI...</p>
                   <Progress value={progress} className="w-full" />
                 </div>
               )}
