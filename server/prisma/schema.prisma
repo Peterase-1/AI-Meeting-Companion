@@ -27,6 +27,7 @@ model Meeting {
   date        DateTime @default(now())
   duration    Int?     // in seconds
   transcript  String?  // Large text
+  fileUrl     String?  // Link to original file (FileStack/S3)
   summary     String?  // Markdown or JSON string
   actionPlan  Json?    // Structured Action Plan
   sentiment   String?  // JSON string: { score, label, details }
