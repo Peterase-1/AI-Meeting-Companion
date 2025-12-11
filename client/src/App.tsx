@@ -9,6 +9,7 @@ import { AuthModal } from './components/Auth/AuthModal'
 import { AuthModalProvider } from './contexts/AuthModalContext'
 import type { RootState, AppDispatch } from './store'
 import { loadUser } from './features/authSlice'
+import { ProfilePage } from './pages/ProfilePage'
 
 function App() {
   const { token, user } = useSelector((state: RootState) => state.auth)
@@ -39,6 +40,7 @@ function App() {
             <OutputSection />
           </Layout>
         } />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </AuthModalProvider>
   )
