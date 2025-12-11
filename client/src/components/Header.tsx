@@ -4,7 +4,7 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { User, LogOut, LogIn } from 'lucide-react'
+import { User, LogOut, LogIn, Clock } from 'lucide-react'
 import type { RootState } from '@/store'
 import { logout } from '@/features/authSlice'
 import { useAuthModal } from '@/contexts/AuthModalContext'
@@ -65,6 +65,16 @@ export const Header: React.FC = () => {
                       </p>
                     </div>
                   </div>
+                  <DropdownMenuItem asChild>
+                    <a href="/profile?tab=settings" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" /> Update Profile
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <a href="/profile?tab=history" className="cursor-pointer">
+                      <Clock className="mr-2 h-4 w-4" /> History
+                    </a>
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600 cursor-pointer">
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
@@ -79,7 +89,7 @@ export const Header: React.FC = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         </nav>
-      </div>
-    </header>
+      </div >
+    </header >
   )
 }

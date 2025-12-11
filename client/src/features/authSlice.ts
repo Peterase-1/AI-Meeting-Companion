@@ -62,6 +62,18 @@ export const loadUser = createAsyncThunk(
   }
 );
 
+export const updateProfile = createAsyncThunk(
+  'auth/updateProfile',
+  async (userData: { name?: string; email?: string; password?: string }, { rejectWithValue }) => {
+    try {
+      const response = await api.put('/api/auth/me', userData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Update failed');
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -113,6 +125,9 @@ const authSlice = createSlice({
       .addCase(loadUser.rejected, (state) => {
         state.token = null;
         state.user = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.user = action.payload;
       });
   },
 });

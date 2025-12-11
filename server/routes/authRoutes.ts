@@ -96,4 +96,31 @@ router.get("/me", verifyToken, async (req: AuthRequest, res) => {
   }
 });
 
+// Update Profile
+router.put("/me", verifyToken, async (req: AuthRequest, res) => {
+  try {
+    const { name, email, password } = req.body;
+    const userId = req.user.id;
+
+    const dataToUpdate: any = {};
+    if (name) dataToUpdate.name = name;
+    if (email) dataToUpdate.email = email;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      dataToUpdate.password = await bcrypt.hash(password, salt);
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: dataToUpdate,
+      select: { id: true, name: true, email: true }
+    });
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error("Update Profile Error:", error);
+    res.status(500).json({ message: "Failed to update profile" });
+  }
+});
+
 export default router;
