@@ -13,53 +13,86 @@ interface AuthRequest extends express.Request {
 // 1. Process & Save Meeting
 router.post("/", verifyToken, async (req: AuthRequest, res) => {
   try {
-    const { transcript, title, date } = req.body;
+    const { transcript, title, date, summary, sentiment, actionItems, decisions, actionPlan, topics, fileUrl } = req.body;
     const userId = req.user.id;
 
-    if (!transcript) {
-      return res.status(400).json({ message: "Transcript is required" });
+    let analysisData: any = {};
+
+    // If analysis data is provided, use it directly (Save what the user sees)
+    if (summary && sentiment && actionItems && decisions) {
+      console.log("Saving existing analysis data...");
+      analysisData = {
+        summary: typeof summary === 'string' ? JSON.parse(summary) : summary,
+        sentiment: typeof sentiment === 'string' ? JSON.parse(sentiment) : sentiment,
+        actionItems: actionItems, // Frontend sends array of objects
+        decisions: decisions, // Frontend sends array of strings
+        actionPlan: actionPlan,
+        topics: topics
+      };
+    } else {
+      // Fallback: Reform analysis (Only if data is missing)
+      console.log("No analysis data provided, running AI analysis...");
+      if (!transcript) {
+        return res.status(400).json({ message: "Transcript is required" });
+      }
+      const aiResult = await analyzeMeeting(transcript);
+      analysisData = aiResult;
     }
 
-    // AI Analysis
-    const analysis = await analyzeMeeting(transcript);
+    // Helper to remove null bytes and non-printable characters
+    const sanitize = (str: any) => {
+      if (typeof str !== 'string') return str;
+      // Remove null bytes and ensure valid UTF-8
+      return str.replace(/\0/g, '').replace(/\u0000/g, '');
+    };
 
     // Save to Database
     const meeting = await prisma.meeting.create({
       data: {
         userId,
-        title: title || "Untitled Meeting",
+        title: sanitize(title) || "Untitled Meeting",
         date: date ? new Date(date) : new Date(),
-        transcript,
-        summary: JSON.stringify(analysis.summary),
-        sentiment: JSON.stringify(analysis.sentiment),
+        transcript: sanitize(transcript) || "",
+        fileUrl: sanitize(fileUrl) || null,
+        summary: sanitize(JSON.stringify(analysisData.summary)),
+        sentiment: sanitize(JSON.stringify(analysisData.sentiment)),
+        actionPlan: analysisData.actionPlan ? analysisData.actionPlan : undefined,
         actionItems: {
-          create: analysis.actionItems.map((item: any) => ({
-            description: item.what,
-            assignee: item.who,
+          create: (analysisData.actionItems || []).map((item: any) => ({
+            description: sanitize(item.description || item.what || "No description"),
+            assignee: sanitize(item.assignee || item.who || null),
             dueDate: (() => {
-              if (!item.dueDate) return null;
-              const date = new Date(item.dueDate);
-              return isNaN(date.getTime()) ? null : date;
+              const d = item.dueDate || item.deadline;
+              if (!d) return null;
+              const dateObj = new Date(d);
+              return isNaN(dateObj.getTime()) ? null : dateObj;
             })(),
-            priority: item.priority || "MEDIUM" // Default to medium if missing
+            priority: sanitize(item.priority || "MEDIUM")
           }))
         },
         decisions: {
-          create: analysis.decisions.map((desc: string) => ({
-            description: desc
+          create: (analysisData.decisions || []).map((desc: any) => ({
+            description: sanitize(typeof desc === 'string' ? desc : (desc.description || JSON.stringify(desc)))
+          }))
+        },
+        topics: {
+          create: (analysisData.topics || []).map((topic: any) => ({
+            name: sanitize(topic.name),
+            content: sanitize(topic.description)
           }))
         }
       },
       include: {
         actionItems: true,
-        decisions: true
+        decisions: true,
+        topics: true
       }
     });
 
     res.status(201).json(meeting);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Save Meeting Error:", error);
-    res.status(500).json({ message: "Failed to save meeting" });
+    res.status(500).json({ message: "Failed to save meeting", error: error.message, details: error });
   }
 });
 
