@@ -9,7 +9,7 @@ import { Progress } from '@/components/ui/progress'
 import { Upload, Mic, Link, Loader2 } from 'lucide-react'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { setMeetingData } from '@/features/meetingSlice'
+import { setMeetingData, setTranscript } from '@/features/meetingSlice'
 import { useAuthModal } from '@/contexts/AuthModalContext'
 import type { RootState } from '@/store'
 
@@ -151,6 +151,7 @@ export const InputSection: React.FC = () => {
       if (response.ok) {
         const data = await response.json()
         console.log('Processing success:', data)
+        dispatch(setTranscript(textToProcess))
         dispatch(setMeetingData(data))
       } else {
         console.error('Processing failed')
