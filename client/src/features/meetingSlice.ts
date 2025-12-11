@@ -1,5 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import { api } from '../lib/api'
 
 export interface MeetingState {
   id?: string
@@ -35,6 +36,8 @@ export interface MeetingState {
       date: string
     }>
   }
+  topics: Array<{ name: string; description: string; keywords: string[] }>
+  chatHistory: Array<{ role: 'user' | 'model'; content: string }>
 }
 
 const initialState: MeetingState = {
@@ -44,6 +47,8 @@ const initialState: MeetingState = {
   decisions: [],
   attendees: [],
   sentiment: { sentiment: '', tone: '', highlights: [] },
+  topics: [],
+  chatHistory: [],
 }
 
 export const meetingSlice = createSlice({
@@ -56,8 +61,35 @@ export const meetingSlice = createSlice({
     setMeetingData: (state, action: PayloadAction<Partial<MeetingState>>) => {
       return { ...state, ...action.payload }
     },
+    setTopics: (state, action: PayloadAction<MeetingState['topics']>) => {
+      state.topics = action.payload
+    },
+    setChatHistory: (state, action: PayloadAction<MeetingState['chatHistory']>) => {
+      state.chatHistory = action.payload
+    },
+    setActionPlan: (state, action: PayloadAction<MeetingState['actionPlan']>) => {
+      state.actionPlan = action.payload
+    },
   },
+  extraReducers: (builder) => {
+    builder.addCase(saveMeeting.fulfilled, (state, action) => {
+      state.id = action.payload.id
+    })
+  }
 })
 
-export const { setTranscript, setMeetingData } = meetingSlice.actions
+export const saveMeeting = createAsyncThunk(
+  'meeting/save',
+  async (meetingData: MeetingState, { rejectWithValue }) => {
+    try {
+      const { id, ...dataToSave } = meetingData
+      const response = await api.post('/api/meetings', dataToSave)
+      return response.data
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to save meeting')
+    }
+  }
+)
+
+export const { setTranscript, setMeetingData, setTopics, setChatHistory, setActionPlan } = meetingSlice.actions
 export default meetingSlice.reducer
