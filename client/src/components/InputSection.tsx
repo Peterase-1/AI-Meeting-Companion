@@ -191,7 +191,11 @@ export const InputSection: React.FC = () => {
 
       recognition.onerror = (event: any) => {
         console.error("Speech recognition error", event.error)
-        setErrorMessage(`Error: ${event.error}`)
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+          setErrorMessage("Microphone access blocked. Please allow permission or use HTTPS/Localhost.")
+        } else {
+          setErrorMessage(`Error: ${event.error}`)
+        }
         setIsRecording(false)
       }
 

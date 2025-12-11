@@ -1,6 +1,5 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useTheme } from "@/components/theme-provider"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -10,13 +9,9 @@ import type { RootState } from '@/store'
 import { logout } from '@/features/authSlice'
 import { useAuthModal } from '@/contexts/AuthModalContext'
 
-import logoDark from "@/assets/logo-dark.png"
-import logoLight from "@/assets/logo.png"
+import logo from "@/assets/logo-dark.png"
 
 export const Header: React.FC = () => {
-  const { theme } = useTheme()
-  const logoSrc = theme === "dark" ? logoDark : logoLight
-
   const { user } = useSelector((state: RootState) => state.auth)
   const dispatch = useDispatch()
   const { openModal, setMode } = useAuthModal()
@@ -35,7 +30,14 @@ export const Header: React.FC = () => {
       <div className="container flex h-24 items-center justify-between">
         <div className="flex items-center">
           <a className="flex items-center space-x-2" href="/">
-            <img src={logoSrc} alt="Logo" className="h-20 w-20 rounded-full object-cover" />
+            <img
+              src={logo}
+              alt="AI Meeting Companion"
+              className="h-20 w-20 rounded-full object-cover invert dark:invert-0"
+            />
+            <span className="hidden md:block font-bold text-xl text-foreground">
+              AI Meeting Companion
+            </span>
           </a>
         </div>
         <nav className="flex items-center gap-4">
