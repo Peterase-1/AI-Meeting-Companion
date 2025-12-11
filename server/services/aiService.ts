@@ -80,6 +80,10 @@ export const analyzeMeeting = async (transcript: string) => {
     console.error("AI Processing Error:", error);
 
     // Check for OpenAI specific errors
+    if (error.status === 429 || error.code === 'insufficient_quota') {
+      throw { status: 429, message: "AI Usage Limit Reached. Please try again later or upgrade your plan." };
+    }
+
     if (error.status) {
       throw { status: error.status, message: error.message || "AI Service Error" };
     }
