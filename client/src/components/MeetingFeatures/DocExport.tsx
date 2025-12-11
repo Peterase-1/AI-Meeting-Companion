@@ -17,7 +17,7 @@ export const DocExport: React.FC<DocExportProps> = ({ meetingId }) => {
     setLoading('slides');
     setError(null);
     try {
-      const response = await api.post(`/meetings/${meetingId}/generate/slides`);
+      const response = await api.post(`/api/meetings/${meetingId}/generate/slides`);
       const data = response.data;
 
       // Create PPTX
@@ -60,7 +60,7 @@ export const DocExport: React.FC<DocExportProps> = ({ meetingId }) => {
     setLoading(type);
     setError(null);
     try {
-      const response = await api.post(`/meetings/${meetingId}/generate/${type}`);
+      const response = await api.post(`/api/meetings/${meetingId}/generate/${type}`);
       const content = response.data.content;
 
       // Download as file
