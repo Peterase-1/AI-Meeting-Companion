@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setTopics } from '../../features/meetingSlice';
+import type { RootState } from '../../store';
 import { api } from '../../lib/api';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Hash } from 'lucide-react';
 
-interface Topic {
-  name: string;
-  description: string;
-  keywords: string[];
-}
-
 interface TopicClusterMapProps {
   meetingId: string;
 }
 
 export const TopicClusterMap: React.FC<TopicClusterMapProps> = ({ meetingId }) => {
-  const [topics, setTopics] = useState<Topic[]>([]);
+  const dispatch = useDispatch();
+  const topics = useSelector((state: RootState) => state.meeting.topics);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,8 +22,8 @@ export const TopicClusterMap: React.FC<TopicClusterMapProps> = ({ meetingId }) =
     setLoading(true);
     setError(null);
     try {
-      const response = await api.post(`/meetings/${meetingId}/topics`);
-      setTopics(response.data.topics);
+      const response = await api.post(`/api/meetings/${meetingId}/topics`);
+      dispatch(setTopics(response.data.topics)); // Save to Redux
     } catch (err) {
       setError("Failed to analyze topics. Please try again.");
       console.error(err);
