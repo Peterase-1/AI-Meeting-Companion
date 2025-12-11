@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setActionPlan } from '../../features/meetingSlice';
+import type { RootState } from '../../store';
 import { api } from '../../lib/api';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,16 +29,24 @@ interface ActionPlanViewProps {
 }
 
 export const ActionPlanView: React.FC<ActionPlanViewProps> = ({ meetingId, initialPlan }) => {
-  const [plan, setPlan] = useState<ActionPlanData | null>(initialPlan || null);
+  const dispatch = useDispatch();
+  const plan = useSelector((state: RootState) => state.meeting.actionPlan);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Initialize with initialPlan if Redux is empty (on first load)
+  React.useEffect(() => {
+    if (!plan && initialPlan) {
+      dispatch(setActionPlan(initialPlan));
+    }
+  }, [initialPlan, plan, dispatch]);
 
   const generatePlan = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.post(`/meetings/${meetingId}/action-plan`);
-      setPlan(response.data);
+      const response = await api.post(`/api/meetings/${meetingId}/action-plan`);
+      dispatch(setActionPlan(response.data)); // Save to Redux
     } catch (err) {
       setError("Failed to generate action plan. Please try again.");
       console.error(err);
