@@ -1,10 +1,12 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import type { RootState } from '@/store'
+import React, { useRef, useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import type { RootState, AppDispatch } from '@/store'
+import { saveMeeting } from '@/features/meetingSlice'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { User, Calendar } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { User, Calendar, Save, Loader2, Check } from 'lucide-react'
 import { ActionPlanView } from './MeetingFeatures/ActionPlanView'
 import { ChatAssistant } from './MeetingFeatures/ChatAssistant'
 import { TopicClusterMap } from './MeetingFeatures/TopicClusterMap'
@@ -12,16 +14,45 @@ import { DocExport } from './MeetingFeatures/DocExport'
 
 export const OutputSection: React.FC = () => {
   const meeting = useSelector((state: RootState) => state.meeting)
+  const dispatch = useDispatch<AppDispatch>()
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveSuccess, setSaveSuccess] = useState(false)
 
   const hasData = meeting.summary.short || meeting.sentiment.sentiment || meeting.actionItems.length > 0 || meeting.decisions.length > 0
+
+  useEffect(() => {
+    if (hasData && sectionRef.current) {
+      sectionRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [hasData])
+
+  const handleSave = async () => {
+    setIsSaving(true)
+    try {
+      await dispatch(saveMeeting(meeting)).unwrap()
+      setSaveSuccess(true)
+      setTimeout(() => setSaveSuccess(false), 2000)
+    } catch (error) {
+      console.error('Failed to save meeting:', error)
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
   if (!hasData) {
     return null
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-12 space-y-8 animate-in fade-in duration-700">
-      <h2 className="text-3xl font-bold text-center">Meeting Insights</h2>
+    <div ref={sectionRef} className="w-full max-w-4xl mx-auto mt-12 space-y-8 animate-in fade-in duration-700">
+      <div className="flex items-center justify-between">
+        <h2 className="text-3xl font-bold text-center flex-1">Meeting Insights</h2>
+        <Button onClick={handleSave} disabled={isSaving || !!meeting.id} variant={saveSuccess ? "outline" : "default"}>
+          {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : saveSuccess || meeting.id ? <Check className="mr-2 h-4 w-4" /> : <Save className="mr-2 h-4 w-4" />}
+          {isSaving ? 'Saving...' : saveSuccess || meeting.id ? 'Saved' : 'Save Results'}
+        </Button>
+      </div>
 
       <Tabs defaultValue="summary" className="w-full">
         <TabsList className="grid w-full grid-cols-4 md:grid-cols-8">
