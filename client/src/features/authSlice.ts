@@ -27,7 +27,7 @@ export const loginUser = createAsyncThunk(
   'auth/login',
   async (userData: any, { rejectWithValue }) => {
     try {
-      const response = await api.post('/auth/login', userData);
+      const response = await api.post('/api/auth/login', userData);
       localStorage.setItem('token', response.data.token);
       return response.data;
     } catch (error: any) {
@@ -40,7 +40,7 @@ export const registerUser = createAsyncThunk(
   'auth/register',
   async (userData: any, { rejectWithValue }) => {
     try {
-      const response = await api.post('/auth/register', userData);
+      const response = await api.post('/api/auth/register', userData);
       localStorage.setItem('token', response.data.token);
       return response.data;
     } catch (error: any) {
@@ -53,7 +53,7 @@ export const loadUser = createAsyncThunk(
   'auth/loadUser',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get('/auth/me');
+      const response = await api.get('/api/auth/me');
       return response.data;
     } catch (error: any) {
       localStorage.removeItem('token');
