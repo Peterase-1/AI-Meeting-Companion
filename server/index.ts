@@ -11,13 +11,17 @@ import meetingRoutes from "./routes/meetingRoutes";
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = 7000;
 
 app.use(cors({
   origin: (origin, callback) => {
     const allowedOrigins = [
       "http://localhost:5173",
       "http://localhost:3000",
+      "http://localhost:6000",
+      "http://localhost:6001",
+      "http://54.188.110.106:6000",
+      "http://54.188.110.106:6001", // Remote Frontend on safe port
       "https://ai-meeting-companion.onrender.com"
     ];
     // Allow requests with no origin (like mobile apps or curl requests)
