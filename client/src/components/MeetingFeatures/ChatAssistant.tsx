@@ -1,4 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setChatHistory } from '../../features/meetingSlice';
+import type { RootState } from '../../store';
 import { api } from '../../lib/api';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,7 +18,8 @@ interface ChatAssistantProps {
 }
 
 export const ChatAssistant: React.FC<ChatAssistantProps> = ({ meetingId }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const dispatch = useDispatch();
+  const messages = useSelector((state: RootState) => state.meeting.chatHistory);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -33,21 +37,23 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ meetingId }) => {
     if (!input.trim() || loading) return;
 
     const userMessage: Message = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
+    const newHistory = [...messages, userMessage];
+    dispatch(setChatHistory(newHistory)); // Save to Redux
+
     setInput('');
     setLoading(true);
 
     try {
-      const response = await api.post(`/meetings/${meetingId}/chat`, {
+      const response = await api.post(`/api/meetings/${meetingId}/chat`, {
         query: userMessage.content,
-        history: messages.map(m => ({ role: m.role, content: m.content }))
+        history: newHistory.map(m => ({ role: m.role, content: m.content }))
       });
 
       const assistantMessage: Message = { role: 'model', content: response.data.answer };
-      setMessages(prev => [...prev, assistantMessage]);
+      dispatch(setChatHistory([...newHistory, assistantMessage])); // Save to Redux
     } catch (error) {
       console.error(error);
-      setMessages(prev => [...prev, { role: 'model', content: "Sorry, I encountered an error answering that." }]);
+      dispatch(setChatHistory([...newHistory, { role: 'model', content: "Sorry, I encountered an error answering that." }])); // Save error to Redux
     } finally {
       setLoading(false);
     }
@@ -83,8 +89,8 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ meetingId }) => {
               </div>
 
               <div className={`rounded-lg px-4 py-2 text-sm shadow-sm ${msg.role === 'user'
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-muted text-foreground'
+                ? 'bg-indigo-600 text-white'
+                : 'bg-muted text-foreground'
                 }`}>
                 {msg.content}
               </div>
