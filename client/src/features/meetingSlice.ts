@@ -5,6 +5,7 @@ import { api } from '../lib/api'
 export interface MeetingState {
   id?: string
   transcript: string
+  fileUrl?: string | null
   summary: {
     short: string
     long: string
@@ -58,6 +59,12 @@ export const meetingSlice = createSlice({
     setTranscript: (state, action: PayloadAction<string>) => {
       state.transcript = action.payload
     },
+    resetMeeting: (state) => {
+      return { ...initialState, transcript: state.transcript } // Keep transcript if user is just re-processing same text, but actually usually we want clean slate. Let's keep transcript if needed or just reset all. User wants new results.
+    },
+    setFileUrl: (state, action: PayloadAction<string | null>) => {
+      state.fileUrl = action.payload
+    },
     setMeetingData: (state, action: PayloadAction<Partial<MeetingState>>) => {
       return { ...state, ...action.payload }
     },
@@ -91,5 +98,5 @@ export const saveMeeting = createAsyncThunk(
   }
 )
 
-export const { setTranscript, setMeetingData, setTopics, setChatHistory, setActionPlan } = meetingSlice.actions
+export const { setTranscript, setFileUrl, setMeetingData, setTopics, setChatHistory, setActionPlan, resetMeeting } = meetingSlice.actions
 export default meetingSlice.reducer
