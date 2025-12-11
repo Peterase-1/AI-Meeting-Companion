@@ -35,7 +35,8 @@ app.use(cors({
     }
   }
 }));
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/meetings", meetingRoutes);
 
@@ -88,7 +89,7 @@ app.post("/api/process", async (req, res) => {
     }
 
     const result = await analyzeMeeting(textToProcess);
-    res.json(result);
+    res.json({ ...result, transcript: textToProcess });
   } catch (error: any) {
     console.error("Processing error:", error);
 
