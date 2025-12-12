@@ -11,6 +11,8 @@ import { updateProfile } from '@/features/authSlice';
 import type { AppDispatch, RootState } from '@/store';
 import { Layout } from '@/components/Layout';
 import { CanvasBackground } from '@/components/InteractiveBackground';
+import { CalendarWidget } from '@/components/Dashboard/CalendarWidget';
+import { AIProxyWidget } from '@/components/Dashboard/AIProxyWidget';
 
 export const ProfilePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -67,9 +69,10 @@ export const ProfilePage: React.FC = () => {
         <h1 className="text-3xl font-bold mb-8 text-white">My Account</h1>
 
         <Tabs value={currentTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-8">
+          <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="settings">Profile Settings</TabsTrigger>
             <TabsTrigger value="history">Meeting History</TabsTrigger>
+            <TabsTrigger value="assistant">Assistant Tools</TabsTrigger>
           </TabsList>
 
           <TabsContent value="settings">
@@ -115,6 +118,19 @@ export const ProfilePage: React.FC = () => {
             <div className="space-y-4">
               <h2 className="text-xl font-semibold text-white mb-4">Your Past Meetings</h2>
               <MeetingHistoryList />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="assistant">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold text-white mb-4">Calendar & Schedule</h2>
+                <CalendarWidget />
+              </div>
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold text-white mb-4">AI Proxy Attendee</h2>
+                <AIProxyWidget />
+              </div>
             </div>
           </TabsContent>
         </Tabs>
