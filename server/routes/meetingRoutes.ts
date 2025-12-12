@@ -257,4 +257,42 @@ router.post("/:id/generate/:type", verifyToken, async (req: AuthRequest, res) =>
   }
 });
 
+// 8. Regenerate Summary with Role
+router.post("/:id/regenerate", verifyToken, async (req: AuthRequest, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+    const { role } = req.body; // e.g., "CEO", "Engineer"
+
+    const meeting = await prisma.meeting.findUnique({ where: { id } });
+
+    if (!meeting || meeting.userId !== userId) {
+      return res.status(404).json({ message: "Meeting not found" });
+    }
+
+    if (!meeting.transcript) {
+      return res.status(400).json({ message: "No transcript available" });
+    }
+
+    const aiResult = await analyzeMeeting(meeting.transcript, role);
+
+    // Update the meeting with new summary/data
+    // Note: We might want to overwrite or store as a variant. For now, we overwrite.
+    await prisma.meeting.update({
+      where: { id },
+      data: {
+        summary: JSON.stringify(aiResult.summary),
+        // We could also update action items if the role demands different tasks, but usually summary is the key.
+        // For showcase, let's keep it simple and just return the new data without saving, 
+        // OR save it. Let's return it so frontend can display it dynamically.
+      }
+    });
+
+    res.json(aiResult);
+  } catch (error) {
+    console.error("Regenerate Error:", error);
+    res.status(500).json({ message: "Failed to regenerate summary" });
+  }
+});
+
 export default router;

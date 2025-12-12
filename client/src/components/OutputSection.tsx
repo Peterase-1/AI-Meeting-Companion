@@ -1,16 +1,6 @@
-import React, { useRef, useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import type { RootState, AppDispatch } from '@/store'
-import { saveMeeting } from '@/features/meetingSlice'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { User, Calendar, Save, Loader2, Check } from 'lucide-react'
-import { ActionPlanView } from './MeetingFeatures/ActionPlanView'
-import { ChatAssistant } from './MeetingFeatures/ChatAssistant'
-import { TopicClusterMap } from './MeetingFeatures/TopicClusterMap'
-import { DocExport } from './MeetingFeatures/DocExport'
+import { SummaryVariantSelector } from './MeetingFeatures/SummaryVariantSelector'
+import { api } from '@/lib/api'
+import { setMeetingData } from '@/features/meetingSlice'
 
 export const OutputSection: React.FC = () => {
   const meeting = useSelector((state: RootState) => state.meeting)
@@ -18,6 +8,8 @@ export const OutputSection: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
+  const [roleLoading, setRoleLoading] = useState(false)
+  const [selectedRole, setSelectedRole] = useState("General")
 
   const hasData = meeting.summary.short || meeting.sentiment.sentiment || meeting.actionItems.length > 0 || meeting.decisions.length > 0
 
@@ -37,6 +29,61 @@ export const OutputSection: React.FC = () => {
       console.error('Failed to save meeting:', error)
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const handleRoleChange = async (newRole: string) => {
+    if (!meeting.id && !meeting.transcript) return; // Need transcript or ID
+    setSelectedRole(newRole);
+    setRoleLoading(true);
+
+    try {
+      // If meeting is saved (has ID), use regenerate endpoint
+      // If not saved (just in memory), we might need a different endpoint or just re-analyze.
+      // But for now, let's assume we can regenerate if we have valid data.
+      // Since user might filter BEFORE saving, we typically need to call 'analyzeMeeting' properly.
+      // The current backend flow for '/' POST analyzes. 
+      // Let's assume for this feature, if no ID, we can't easily regenerate via the '/:id/regenerate' endpoint.
+      // Correction: If the meeting is not saved, we can't use /:id/regenerate.
+      // However, we can add a logic: if no ID, we probably shouldn't show the selector or we should handle it client side?
+      // No, let's assume this feature works best on saved meetings OR we reuse the analyze logic.
+
+      let response;
+      if (meeting.id) {
+        response = await api.post(`/api/meetings/${meeting.id}/regenerate`, { role: newRole });
+      } else {
+        // Fallback for unsaved meetings? Typically we just save first or warn.
+        // Or we can just mock it for "Showcase" if needed, but let's try to do it right.
+        // We can call a new endpoint '/api/meetings/analyze' that takes transcript and role.
+        // But implementing that is extra work. 
+        // Simplified: Only show selector if meeting.id exists? 
+        // Or enable it and alert if not saved.
+        // Actually, we can use the existing save flow but that's complex.
+        // Let's just limit to saved meetings for now, or assume we only use it after save.
+        // But wait, the user instructions didn't specify.
+        // Let's try to support it: we can just call a specialized endpoint that doesn't require ID if we send transcript.
+        // But simpler: just alert "Please save meeting first".
+        // Better: auto-save then regenerate?
+        // Let's stick to: if (meeting.id) call endpoint. Else, alert.
+        if (!meeting.id) {
+          alert("Please save the meeting first to use Role-Based summaries.");
+          setRoleLoading(false);
+          return;
+        }
+        response = await api.post(`/api/meetings/${meeting.id}/regenerate`, { role: newRole });
+      }
+
+      const newData = response.data;
+      dispatch(setMeetingData({
+        summary: newData.summary,
+        actionItems: newData.actionItems, // Update these too as they might change
+        decisions: newData.decisions
+      }));
+
+    } catch (err) {
+      console.error("Role update failed", err);
+    } finally {
+      setRoleLoading(false);
     }
   }
 
@@ -67,6 +114,14 @@ export const OutputSection: React.FC = () => {
         </TabsList>
 
         <TabsContent value="summary" className="space-y-4">
+          <div className="flex justify-between items-center bg-card border rounded-lg p-2 mb-2">
+            <span className="text-sm font-medium text-muted-foreground ml-2">View As:</span>
+            <SummaryVariantSelector
+              selectedRole={selectedRole}
+              onRoleChange={handleRoleChange}
+              loading={roleLoading}
+            />
+          </div>
           <Card>
             <CardHeader>
               <CardTitle>Executive Summary</CardTitle>

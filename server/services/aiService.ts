@@ -8,22 +8,37 @@ const openai = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
 });
 
-export const analyzeMeeting = async (transcript: string) => {
+export const analyzeMeeting = async (transcript: string, role: string = "General") => {
   try {
+    let rolePrompt = "";
+    switch (role.toLowerCase()) {
+      case "ceo":
+        rolePrompt = "Focus on High-Level Strategic Decisions, ROI, and Risks. Be concise.";
+        break;
+      case "engineer":
+        rolePrompt = "Focus on Technical Details, Architecture changes, Bugs, and Tech Debt.";
+        break;
+      case "sales":
+        rolePrompt = "Focus on Actionable Leads, Customer Concerns, and Next Steps for closing deals.";
+        break;
+      default:
+        rolePrompt = "Provide a balanced general business summary.";
+    }
+
     // Phase 1: Deep Analysis (Summary, Action Items, Decisions)
     const analysisCompletion = await openai.chat.completions.create({
       model: "kwaipilot/kat-coder-pro:free",
       messages: [
         {
           role: "system",
-          content: `You are an expert meeting assistant. Analyze the following meeting transcript.
+          content: `You are an expert meeting assistant acting as a summarizer for a ${role}. ${rolePrompt} Analyze the following meeting transcript.
           
           FIRST, detect the dominant language of the transcript.
           - If the language is AMHARIC, the entire output (Summary, Action Item descriptions, Decisions, etc.) MUST be in AMHARIC.
           - If the language is ENGLISH (or other), output in ENGLISH.
 
           Provide a structured JSON output containing:
-          1. "summary": { "short": "A clean paragraph summary", "long": "Detailed notes" }
+          1. "summary": { "short": "A clean paragraph summary", "long": "Detailed notes tailored for the role" }
           2. "actionItems": [{ "who": "Name", "what": "Task", "dueDate": "Date/null", "priority": "High/Medium/Low" }]
           3. "decisions": ["Decision 1", "Decision 2"]
           4. "attendees": [{ "name": "Name", "role": "Role" }]
