@@ -12,12 +12,13 @@ interface DocExportProps {
 export const DocExport: React.FC<DocExportProps> = ({ meetingId }) => {
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [language, setLanguage] = useState<string>("English");
 
   const generateSlides = async () => {
     setLoading('slides');
     setError(null);
     try {
-      const response = await api.post(`/api/meetings/${meetingId}/generate/slides`);
+      const response = await api.post(`/api/meetings/${meetingId}/generate/slides`, { language });
       const data = response.data;
 
       // Create PPTX
@@ -46,7 +47,7 @@ export const DocExport: React.FC<DocExportProps> = ({ meetingId }) => {
         }
       });
 
-      pres.writeFile({ fileName: `Meeting-Slides-${new Date().toISOString().split('T')[0]}.pptx` });
+      pres.writeFile({ fileName: `Meeting-Slides-${language}-${new Date().toISOString().split('T')[0]}.pptx` });
 
     } catch (err) {
       console.error(err);
@@ -60,7 +61,7 @@ export const DocExport: React.FC<DocExportProps> = ({ meetingId }) => {
     setLoading(type);
     setError(null);
     try {
-      const response = await api.post(`/api/meetings/${meetingId}/generate/${type}`);
+      const response = await api.post(`/api/meetings/${meetingId}/generate/${type}`, { language });
       const content = response.data.content;
 
       // Download as file
@@ -68,7 +69,7 @@ export const DocExport: React.FC<DocExportProps> = ({ meetingId }) => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${label.replace(/ /g, '-')}-${new Date().toISOString().split('T')[0]}.md`;
+      a.download = `${label.replace(/ /g, '-')}-${language}-${new Date().toISOString().split('T')[0]}.md`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -84,6 +85,25 @@ export const DocExport: React.FC<DocExportProps> = ({ meetingId }) => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
+
+      <div className="flex items-center justify-end gap-2">
+        <span className="text-sm font-medium text-muted-foreground">Output Language:</span>
+        <div className="flex bg-muted rounded-md p-1">
+          <button
+            onClick={() => setLanguage("English")}
+            className={`px-3 py-1 text-sm rounded-sm transition-colors ${language === "English" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            English
+          </button>
+          <button
+            onClick={() => setLanguage("Amharic")}
+            className={`px-3 py-1 text-sm rounded-sm transition-colors ${language === "Amharic" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            Amharic
+          </button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
         {/* Presentation Card */}
@@ -104,7 +124,7 @@ export const DocExport: React.FC<DocExportProps> = ({ meetingId }) => {
               className="w-full bg-purple-600 hover:bg-purple-700 text-white"
             >
               {loading === 'slides' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
-              Generate .pptx
+              Generate .pptx ({language})
             </Button>
           </CardContent>
         </Card>

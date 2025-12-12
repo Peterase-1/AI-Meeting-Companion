@@ -225,14 +225,18 @@ export const clusterTopics = async (transcript: string) => {
   }
 };
 
-export const generateSlideContent = async (transcript: string) => {
+export const generateSlideContent = async (transcript: string, language: string = "English") => {
   try {
+    const langInstruction = language === "Amharic"
+      ? "Generate the title, headers, bullets, and notes in AMHARIC."
+      : "Generate the content in ENGLISH.";
+
     const completion = await openai.chat.completions.create({
       model: "kwaipilot/kat-coder-pro:free",
       messages: [
         {
           role: "system",
-          content: `Create a presentation outline from the meeting transcript.
+          content: `Create a presentation outline from the meeting transcript. ${langInstruction}
           Output JSON format:
           {
             "title": "Meeting Title",
@@ -261,7 +265,7 @@ export const generateSlideContent = async (transcript: string) => {
   }
 };
 
-export const convertDocument = async (transcript: string, type: string) => {
+export const convertDocument = async (transcript: string, type: string, language: string = "English") => {
   try {
     const prompts: any = {
       proposal: "Write a Project Proposal based on this meeting. Include Background, Objectives, Scope, and Timeline.",
@@ -272,6 +276,9 @@ export const convertDocument = async (transcript: string, type: string) => {
     };
 
     const prompt = prompts[type] || "Write a detailed document summarizing the meeting contents.";
+    const langInstruction = language === "Amharic"
+      ? "Output the entire document in AMHARIC language."
+      : "Output the document in ENGLISH.";
 
     const completion = await openai.chat.completions.create({
       model: "kwaipilot/kat-coder-pro:free",
@@ -279,6 +286,7 @@ export const convertDocument = async (transcript: string, type: string) => {
         {
           role: "system",
           content: `You are an expert technical writer. ${prompt}
+          ${langInstruction}
           Output the document in Markdown format.`
         },
         {

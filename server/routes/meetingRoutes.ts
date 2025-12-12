@@ -231,6 +231,7 @@ router.post("/:id/generate/:type", verifyToken, async (req: AuthRequest, res) =>
   try {
     const userId = req.user.id;
     const { id, type } = req.params; // type: 'slides' | 'proposal' | 'technical_spec' | etc.
+    const { language } = req.body;
 
     const meeting = await prisma.meeting.findUnique({ where: { id } });
 
@@ -244,10 +245,10 @@ router.post("/:id/generate/:type", verifyToken, async (req: AuthRequest, res) =>
 
     let result;
     if (type === 'slides') {
-      result = await generateSlideContent(meeting.transcript);
+      result = await generateSlideContent(meeting.transcript, language);
     } else {
       // Assume other types are documents
-      result = await convertDocument(meeting.transcript, type);
+      result = await convertDocument(meeting.transcript, type, language);
     }
 
     res.json(result);
