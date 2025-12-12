@@ -10,6 +10,7 @@ import { AuthModalProvider } from './contexts/AuthModalContext'
 import type { RootState, AppDispatch } from './store'
 import { loadUser } from './features/authSlice'
 import { ProfilePage } from './pages/ProfilePage'
+import { CalendarWidget } from './components/Dashboard/CalendarWidget'
 
 function App() {
   const { token, user } = useSelector((state: RootState) => state.auth)
@@ -36,7 +37,16 @@ function App() {
                 Transform your meetings with AI-powered summaries, action items, and more.
               </p>
             </div>
-            <InputSection />
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full max-w-6xl mx-auto relative z-10">
+              <div className="lg:col-span-2">
+                <InputSection />
+              </div>
+              <div className="lg:col-span-1">
+                <CalendarWidget />
+              </div>
+            </div>
+
             <OutputSection />
           </Layout>
         } />
