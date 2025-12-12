@@ -5,6 +5,4 @@ dist-ssr
 *.local
 .env
 .env.*
-docker-compose.yml
-docker-compose.yaml
-cleanup_and_deploy.sh
+
