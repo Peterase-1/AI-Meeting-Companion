@@ -11,6 +11,7 @@ import type { RootState, AppDispatch } from './store'
 import { loadUser } from './features/authSlice'
 import { ProfilePage } from './pages/ProfilePage'
 import { CalendarWidget } from './components/Dashboard/CalendarWidget'
+import { AIProxyWidget } from './components/Dashboard/AIProxyWidget'
 
 function App() {
   const { token, user } = useSelector((state: RootState) => state.auth)
@@ -39,11 +40,12 @@ function App() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full max-w-6xl mx-auto relative z-10">
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2 space-y-6">
                 <InputSection />
               </div>
-              <div className="lg:col-span-1">
+              <div className="lg:col-span-1 space-y-6">
                 <CalendarWidget />
+                <AIProxyWidget />
               </div>
             </div>
 
