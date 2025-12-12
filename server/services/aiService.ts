@@ -16,7 +16,13 @@ export const analyzeMeeting = async (transcript: string) => {
       messages: [
         {
           role: "system",
-          content: `You are an expert meeting assistant. Analyze the following meeting transcript and provide a structured JSON output containing:
+          content: `You are an expert meeting assistant. Analyze the following meeting transcript.
+          
+          FIRST, detect the dominant language of the transcript.
+          - If the language is AMHARIC, the entire output (Summary, Action Item descriptions, Decisions, etc.) MUST be in AMHARIC.
+          - If the language is ENGLISH (or other), output in ENGLISH.
+
+          Provide a structured JSON output containing:
           1. "summary": { "short": "A clean paragraph summary", "long": "Detailed notes" }
           2. "actionItems": [{ "who": "Name", "what": "Task", "dueDate": "Date/null", "priority": "High/Medium/Low" }]
           3. "decisions": ["Decision 1", "Decision 2"]
@@ -100,6 +106,9 @@ export const generateActionPlan = async (transcript: string) => {
         {
           role: "system",
           content: `You are a project manager expert. Extract a detailed action plan from the meeting transcript.
+          
+          Identify the language. If Amharic, all descriptions/goals MUST be in Amharic.
+
           Output JSON format:
           {
             "goals": ["Goal 1", "Goal 2"],
@@ -172,6 +181,9 @@ export const clusterTopics = async (transcript: string) => {
         {
           role: "system",
           content: `Analyze the meeting transcript and identify key topics discussed. Group relevant content under each topic.
+          
+          Identify the language. If Amharic, Topic Names and Descriptions MUST be in Amharic.
+
           Output JSON format:
           {
             "topics": [
