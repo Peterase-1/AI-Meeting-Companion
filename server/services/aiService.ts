@@ -296,9 +296,51 @@ export const convertDocument = async (transcript: string, type: string, language
       ]
     });
 
+
     return { content: completion.choices[0].message.content || "Failed to generate content." };
   } catch (error: any) {
     console.error("Doc Gen Error:", error);
     throw { status: 500, message: "Failed to generate document" };
+  }
+};
+
+export const generateGanttChart = async (transcript: string) => {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "kwaipilot/kat-coder-pro:free",
+      messages: [
+        {
+          role: "system",
+          content: `You are a project manager expert. Extract tasks for a Gantt Chart from the meeting transcript.
+          
+          Identify the language. If Amharic, Task Names MUST be in Amharic.
+          
+          Output JSON format:
+          {
+            "tasks": [
+              {
+                "id": "Task Number (e.g., 1, 2)",
+                "name": "Task Name",
+                "start": "YYYY-MM-DD (Estimate based on context, default to today)",
+                "end": "YYYY-MM-DD (Estimate duration, default to start + 3 days)",
+                "progress": 0 (Default to 0, unless "done" or "in progress"),
+                "dependencies": ["Task ID of prerequisite"]
+              }
+            ]
+          }
+          Ensure tasks are logical and sequential based on the discussion.`
+        },
+        {
+          role: "user",
+          content: transcript
+        }
+      ],
+      response_format: { type: "json_object" }
+    });
+
+    return JSON.parse(completion.choices[0].message.content || "{}");
+  } catch (error: any) {
+    console.error("Gantt Gen Error:", error);
+    throw { status: 500, message: "Failed to generate Gantt chart" };
   }
 };

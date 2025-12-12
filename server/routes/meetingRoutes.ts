@@ -1,7 +1,7 @@
 import express from "express";
 import { prisma } from "../lib/prisma";
 import { verifyToken } from "../middleware/auth";
-import { analyzeMeeting, generateActionPlan, answerQuestion, clusterTopics, generateSlideContent, convertDocument } from "../services/aiService";
+import { analyzeMeeting, generateActionPlan, answerQuestion, clusterTopics, generateSlideContent, convertDocument, generateGanttChart } from "../services/aiService";
 
 const router = express.Router();
 
@@ -293,6 +293,44 @@ router.post("/:id/regenerate", verifyToken, async (req: AuthRequest, res) => {
   } catch (error) {
     console.error("Regenerate Error:", error);
     res.status(500).json({ message: "Failed to regenerate summary" });
+  }
+});
+
+// 9. Generate Gantt Chart
+router.post("/:id/gantt", verifyToken, async (req: AuthRequest, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const meeting = await prisma.meeting.findUnique({ where: { id } });
+
+    if (!meeting || meeting.userId !== userId) {
+      return res.status(404).json({ message: "Meeting not found" });
+    }
+
+    if (!meeting.transcript) {
+      return res.status(400).json({ message: "No transcript available" });
+    }
+
+    const ganttData = await generateGanttChart(meeting.transcript);
+
+    // Merge with existing actionPlan or create new
+    const currentActionPlan: any = meeting.actionPlan || {};
+    const updatedActionPlan = {
+      ...currentActionPlan,
+      gantt: ganttData.tasks // Store tasks array under "gantt" key
+    };
+
+    // Save to DB
+    await prisma.meeting.update({
+      where: { id },
+      data: { actionPlan: updatedActionPlan }
+    });
+
+    res.json(ganttData);
+  } catch (error) {
+    console.error("Gantt Error:", error);
+    res.status(500).json({ message: "Failed to generate Gantt chart" });
   }
 });
 

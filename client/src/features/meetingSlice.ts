@@ -36,6 +36,14 @@ export interface MeetingState {
       milestone: string
       date: string
     }>
+    gantt?: Array<{
+      id: string
+      name: string
+      start: string
+      end: string
+      progress: number
+      dependencies: string[]
+    }>
   }
   topics: Array<{ name: string; description: string; keywords: string[] }>
   chatHistory: Array<{ role: 'user' | 'model'; content: string }>

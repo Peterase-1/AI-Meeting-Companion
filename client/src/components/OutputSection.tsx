@@ -12,6 +12,7 @@ import { ChatAssistant } from './MeetingFeatures/ChatAssistant'
 import { TopicClusterMap } from './MeetingFeatures/TopicClusterMap'
 import { DocExport } from './MeetingFeatures/DocExport'
 import { SummaryVariantSelector } from './MeetingFeatures/SummaryVariantSelector'
+import GanttView from './MeetingFeatures/GanttView'
 import { api } from '@/lib/api'
 import { setMeetingData } from '@/features/meetingSlice'
 
@@ -122,6 +123,7 @@ export const OutputSection: React.FC = () => {
           <TabsTrigger value="sentiment">Sentiment</TabsTrigger>
           <TabsTrigger value="topics">Topics</TabsTrigger>
           <TabsTrigger value="plan">Plan</TabsTrigger>
+          <TabsTrigger value="gantt">Gantt</TabsTrigger>
           <TabsTrigger value="export">Export</TabsTrigger>
           <TabsTrigger value="chat">Chat</TabsTrigger>
         </TabsList>
@@ -246,6 +248,16 @@ export const OutputSection: React.FC = () => {
           ) : (
             <div className="text-center p-8 text-muted-foreground">
               Please save the meeting to generate an action plan.
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="gantt">
+          {meeting.id ? (
+            <GanttView />
+          ) : (
+            <div className="text-center p-8 text-muted-foreground">
+              Please save the meeting to generate a project timeline (Gantt).
             </div>
           )}
         </TabsContent>
