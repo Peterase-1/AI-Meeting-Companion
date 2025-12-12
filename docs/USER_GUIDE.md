@@ -1,91 +1,117 @@
 # AI Meeting Companion - User Guide
 
-Welcome to the **AI Meeting Companion**! This tool helps you capture, analyze, and extract insights from your meetings using advanced AI.
+Welcome to the AI Meeting Companion. This comprehensive tool is designed to help you capture, analyze, and extract actionable insights from your meetings using advanced Artificial Intelligence.
 
 ## 1. Getting Started
 
-### Creating an Account / Logging In
-You can explore the interface as a guest, but to **process data** or **save results**, you must be logged in.
+### Creating an Account and Logging In
+While you can explore the interface as a guest, creating an account is essential to unlock the full potential of the application, including processing data and saving your results.
 
-1.  Click the **Log in** button in the top right corner (person icon).
+1.  Click the Log in button in the top right corner.
 2.  In the popup window:
-    *   **New User?** Click the "Register" tab. Enter your Name, Email, and Password.
-    *   **Returning User?** Stick to the "Login" tab and enter your credentials.
-3.  Once logged in, your name will appear in the top right corner.
+    *   **New User?** Select the "Register" tab. Enter your Name, Email, and Password.
+    *   **Returning User?** Remain on the "Login" tab and enter your credentials.
+3.  Upon successful login, your name will appear in the top right corner, confirming you are authenticated.
 
 ---
 
 ## 2. Capturing Meeting Data
 
-You have three ways to provide meeting content for analysis:
+The application provides three distinct methods to ingest meeting content for analysis, catering to different workflows.
 
 ### Option A: Upload File (Recommended)
-Best for pre-recorded meetings or existing documents.
-1.  Go to the **"Upload File"** tab.
-2.  Drag and drop your file or click **"Select File"**.
-    *   *Supported Audio*: `.mp3`, `.m4a`
-    *   *Supported Text*: `.txt`, `.docx`, `.pdf`
-3.  Click **"Process Uploaded File"**. The AI will transcribe (if audio) and analyze the content.
+This method is ideal for pre-recorded meetings, webinars, or existing documents.
+
+1.  Navigate to the "Upload File" tab within the Input Section.
+2.  Drag and drop your file into the designated area or click "Select File".
+    *   **Supported Audio Formats**: .mp3, .m4a
+    *   **Supported Text Formats**: .txt, .docx, .pdf
+3.  Click "Process Uploaded File". The AI will automatically transcribe audio content and analyze text documents.
 
 ### Option B: Paste Text
-Best for copying notes from another app (e.g., Zoom, Teams, Google Docs).
-1.  Go to the **"Paste Text"** tab.
-2.  Paste your transcript or meeting notes into the text box.
-3.  Click **"Process Text"**.
+This method is perfect for processing notes copied from other applications such as Zoom chat, Microsoft Teams, or Google Docs.
 
-### Option C: Live Transcript (Microphone)
-Best for real-time meetings.
-1.  Go to the **"Live Transcript"** tab.
-2.  Click the big **Microphone** button.
-    *   *Note: You must allow microphone permissions. If you are not on `localhost`, you must be using HTTPS.*
-3.  Speak or let the meeting play. Text will appear in real-time.
-4.  Click the Microphone again to stop.
-5.  Click **"Process Recording"** to analyze the captured text.
+1.  Navigate to the "Paste Text" tab.
+2.  Paste your transcript or meeting notes directly into the text box.
+3.  Click "Process Text" to initiate analysis.
 
----
+### Option C: Live Transcript
+This method is designed for real-time meetings where you want to capture the conversation as it happens.
 
-## 3. Analyzing Results
-
-Once processing is complete, the application will scroll down to the **"Meeting Insights"** section.
-
-### 🏠 Summary Tab
-*   **Overview**: A concise summary of the entire meeting.
-*   **Key Points**: Bullet points of the most important takeaways.
-*   **Sentiment**: Analysis of the meeting's tone (Positive/Neutral/Negative).
-
-### 🕸️ Topics Tab (Interactive)
-*   Visualizes the main topics discussed as a cluster map.
-*   **Interact**: Click on bubbles to see how topics relate.
-*   *Data Persistence*: This data is saved even if you switch tabs.
-
-### 💬 Chat Assistant Tab
-*   Have a conversation with your meeting!
-*   **Ask questions**: "What did we decide about the budget?", "Who is responsible for marketing?"
-*   *Data Persistence*: Your chat history is saved while you switch tabs.
-
-### 📋 Action Plan Tab
-*   Generates a structured list of tasks.
-*   **Columns**: Action Item, Assignee, Priority, Due Date.
-*   *Data Persistence*: The plan remains available while you switch tabs.
-
-### 📤 Export Tab
-*   Download your insights to share with the team.
-*   **Download Report**: Get a Text file summary.
-*   **Download Slides**: Generate a PowerPoint (.pptx) presentation.
+1.  Navigate to the "Live Transcript" tab.
+2.  Click the "Start Recording" button.
+    *   *Note: You must grant microphone permissions. For remote use, ensure you are accessing the site via HTTPS.*
+3.  Speak clearly or let the meeting audio play. The text will appear on the screen in real-time.
+4.  Click the button again to stop recording.
+5.  Click "Process Recording" to analyze the captured text.
 
 ---
 
-## 4. Saving Your Work
+## 3. Advanced Features & Analysis
 
-*   **Save Meeting**: Click the "Save Meeting" button (often located near the results) to store the analysis in your history (Database).
-*   **Previous Meetings**: (Coming Soon) Access your saved history from your profile.
+Once the data is processed, the application unlocks a suite of powerful analytical tools.
+
+### Automatic Amharic Support
+The system automatically detects if the meeting was conducted in Amharic. If detected, all summaries and insights will be generated in Amharic to ensure relevance and accessibility.
+
+### Meeting Insights (Summary Tab)
+This is your primary dashboard for understanding the meeting's core content.
+
+*   **Overview**: A concise paragraph summarizing the entire discussion.
+*   **Key Points**: A bulleted list of the most critical takeaways.
+*   **Sentiment Analysis**: An evaluation of the meeting's emotional tone (Positive, Neutral, or Negative), providing context on the team's morale.
+
+### Role-Based Summaries
+Tailor the insights to your specific needs by selecting a perspective.
+
+*   **General**: The standard, balanced summary.
+*   **CEO**: A high-level strategic overview focusing on outcomes and bottom lines.
+*   **Engineer**: A technical deep-dive focusing on implementation details and blockers.
+*   **Sales**: A customer-centric view focusing on opportunities, risks, and client needs.
+
+### Topics Explorer
+A visual cluster map representing the main themes discussed.
+
+*   **Visualization**: See how different topics relate to one another.
+*   **Interaction**: Click on any topic bubble to drill down into specifics.
+
+### Chat Assistant
+An interactive AI agent capable of answering specific questions about the meeting.
+
+*   **Query**: Ask questions like "What was the budget decision?" or "Who is leading the marketing project?".
+*   **Context**: The assistant uses the full meeting transcript to provide accurate, evidence-based answers.
+
+### Action Plan & Gantt Chart
+Turn talk into action with structured task management.
+
+*   **Action Items**: A detailed list of tasks including the Description, Assignee, Priority, and Due Date.
+*   **Gantt Chart Projector**: A visual timeline view of the project tasks, automatically generated from the meeting context. It shows dependencies and schedules in a clear, linear format.
+
+### Multi-Language Export
+Share your findings with the team in the format that suits them best.
+
+*   **Languages**: Toggle between English and Amharic for your exports.
+*   **Reports**: Download a comprehensive text report.
+*   **Slides**: Generate a PowerPoint (.pptx) presentation with formatted slides for each section.
+
+---
+
+## 4. Profile & Assistant Tools
+
+Access your personal workspace by navigating to the Profile page or clicking your avatar.
+
+### Meeting History
+View a chronological list of all your past meetings. Click on any entry to review the saved summary and insights.
+
+### Assistant Tools Tab
+A dedicated space for productivity widgets.
+
+*   **Calendar Integration**: Connect and view your upcoming schedule directly within the application profile.
+*   **AI Proxy Attendee**: A simulation tool that allows an AI agent to "attend" meetings on your behalf, listening for mentions and relevant topics to summarize later.
 
 ---
 
 ## Troubleshooting
 
-*   **"Microphone access blocked"**:
-    *   Ensure you clicked "Allow" on the browser popup.
-    *   If using a remote server, ensure you are accessing via `HTTPS`, or add the IP to `chrome://flags/#unsafely-treat-insecure-origin-as-secure`.
-*   **"AI Usage Limit Reached"**:
-    *   This means the backend AI service is temporarily busy or out of credits. Please try again in a few minutes.
+*   **Microphone Access Blocked**: Ensure you have allowed browser permissions. If using a remote server, verify you are using a secure connection (HTTPS) or have properly configured browser flags.
+*   **AI Rate Limits**: If you encounter a limit reached message, it indicates high demand on the backend AI service. Please wait a few moments before trying again.

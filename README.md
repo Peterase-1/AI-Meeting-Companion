@@ -1,61 +1,85 @@
 # AI Meeting Companion
 
-Transform your meetings with AI-powered summaries, action items, and more.
-
-![AI Meeting Companion](docs/images/upload-tab.png)
+Transform your meetings with data-driven insights using the AI Meeting Companion. This advanced application leverages Artificial Intelligence to automatically transcribe, analyze, and summarize your meetings, converting chaotic discussions into structured, actionable data.
 
 ## Features
 
-AI Meeting Companion is a comprehensive tool designed to revolutionize how you interact with meeting data. By leveraging advanced Artificial Intelligence, it transforms raw audio and text into actionable insights, saving you time and ensuring no critical detail is missed.
+AI Meeting Companion is designed to be the ultimate productivity tool for modern teams, offering a suite of intelligent features.
 
-### 1. Versatile Input Methods
+### 1. Comprehensive Input Support
+The system is built to handle data from any source.
+*   **File Upload**: Drag and drop audio files (MP3, M4A) for automatic transcription or text documents (PDF, DOCX, TXT) for instant analysis.
+*   **Live Recording**: Use the integrated microphone to capture real-time audio from in-person or virtual meetings, with live streaming transcription.
+*   **Text Input**: Paste existing transcripts or notes directly for quick summarization.
 
-The application supports multiple ways to input meeting data, catering to different workflows and scenarios:
+### 2. Intelligent Summarization & Roles
+Go beyond simple summaries with perspective-based analysis.
+*   **Smart Summary**: Automatically extracts the core narrative, key points, and overall sentiment.
+*   **Role-Based Views**: Toggle the summary perspective to suit your audience—choose from General, CEO (strategic), Engineer (technical), or Sales (client-focused).
 
-*   **File Upload**: Seamlessly upload existing meeting records. The system supports a wide range of formats including audio files (MP3, M4A) for automatic transcription and document files (TXT, DOCX, PDF) for direct analysis.
-*   **Paste Text**: For quick processing of existing notes or clipboard content, simply paste your text directly into the application. This is ideal for processing email threads or manual meeting minutes.
-*   **Live Audio Recording**: Capture meetings in real-time using the built-in microphone integration. Powered by the Web Speech API, this feature provides instant transcription as you speak, allowing you to focus on the conversation while the app captures the details.
+### 3. Actionable Task Management
+Turn conversation into execution.
+*   **Action Item Extraction**: The AI identifies tasks, assignees, and deadlines, creating a structured table of "Who needs to do What".
+*   **Gantt Chart Visualization**: Automatically projects timelines and task dependencies onto a visual Gantt chart, helping you plan the next steps immediately.
 
-### 2. Intelligent AI Analysis
+### 4. Advanced Topic Analysis
+Understand the structure of your conversation.
+*   **Cluster Map**: Visualizes the main topics of discussion and their relationships in an interactive node graph.
+*   **Topic Drill-Down**: Click on any topic to explore specific details and context associated with that theme.
 
-Once data is ingested, our powerful AI engine breaks it down to provide deep understanding and clarity:
+### 5. Interactive AI Assistant
+Have a conversation with your meeting data.
+*   **Q&A Interface**: Ask specific questions like "What was the budget for Q4?" or "Did we mention the client deadline?" and get accurate answers based on the transcript.
 
-*   **Smart Summarization**: Condenses long discussions into concise, readable summaries. It identifies the core narrative of the meeting, allowing you to grasp the essence of hour-long calls in minutes.
-*   **Action Item Extraction**: Automatically identifies tasks, assignments, and deadlines mentioned during the meeting. It creates a structured list of "Who needs to do What," ensuring accountability and follow-through.
-*   **Key Decision Tracking**: Highlights critical decisions made during the session. This feature separates agreed-upon outcomes from general discussion, providing a clear record of consensus.
-*   **Sentiment & Tone Analysis**: Analyzes the emotional undertone of the meeting. It can detect whether the conversation was positive, neutral, or concerned, giving you insights into team morale and client satisfaction.
+### 6. Multi-Language Support
+Built for global teams with specific support for Amharic.
+*   **Auto-Detection**: The system automatically detects Amharic language input.
+*   **Bi-Lingual Output**: Generate summaries, slides, and reports in either English or Amharic with a single click.
 
-### 3. Modern & Immersive User Experience
+### 7. Productivity Widgets
+Tools to keep you organized.
+*   **Calendar Integration**: View your upcoming schedule directly within the application profile.
+*   **AI Proxy Attendee**: Simulate an AI agent that monitors meetings for you, listening for specific keywords or mentions.
 
-The application is built with a focus on aesthetics and usability, ensuring a premium experience:
+## Technology Stack
 
-*   **Interactive Particle Background**: A dynamic, cursor-reactive background adds a layer of visual depth and engagement without distracting from the content.
-*   **Adaptive Theme System**: Fully supports both Dark and Light modes. The interface automatically adjusts colors, contrast, and visual elements to provide optimal readability in any lighting condition.
-*   **Responsive Design**: Whether you are on a large desktop monitor or a laptop, the layout adapts fluidly to ensure all information is accessible and well-organized.
+This project is engineered for performance, scalability, and maintainability using a modern tech stack.
 
-## Tech Stack
+### Frontend
+*   **React**: Component-based UI library.
+*   **TypeScript**: Static typing for robust code.
+*   **Vite**: Next-generation frontend tooling.
+*   **Redux Toolkit**: Efficient state management.
+*   **Tailwind CSS**: Utility-first styling framework.
+*   **Shadcn UI**: Accessible component library.
 
-This project is built using a robust modern technology stack to ensure performance, scalability, and maintainability:
+### Backend
+*   **Node.js**: JavaScript runtime environment.
+*   **Express.js**: Fast web framework for API routing.
+*   **Prisma**: Next-generation ORM for database management.
+*   **PostgreSQL**: Reliable relational database.
+*   **Multer**: Middleware for handling `multipart/form-data`.
 
-*   **Frontend Framework**: React with TypeScript for type-safe, component-based UI development.
-*   **Build Tool**: Vite for lightning-fast development server start-up and optimized production builds.
-*   **Styling**: Tailwind CSS for utility-first styling, combined with Shadcn UI for accessible, pre-built components.
-*   **State Management**: Redux Toolkit for efficient global state management across the application.
-*   **Backend Runtime**: Node.js environment.
-*   **API Server**: Express.js for handling API requests and file processing.
-*   **AI Integration**: Integration with advanced LLMs (Large Language Models) for text processing and analysis.
+### AI & Services
+*   **OpenRouter**: Gateway to advanced LLMs.
+*   **FileStack**: File management and uploading service.
+*   **Web Speech API**: Native browser support for speech-to-text.
+
+### DevOps & Deployment
+*   **Docker**: Containerization for consistent environments.
+*   **Docker Compose**: Multi-container orchestration.
+*   **Nginx**: High-performance web server and reverse proxy.
 
 ## Getting Started
 
-Follow these instructions to set up the project on your local machine for development and testing purposes.
+Follow these instructions to set up the project locally.
 
 ### Prerequisites
-
-Ensure you have the following installed on your system:
-*   Node.js (v16 or higher)
+*   Node.js (v18 or higher)
 *   npm (Node Package Manager)
+*   Docker Desktop (optional, for containerized run)
 
-### Installation Guide
+### Local Development
 
 1.  **Clone the Repository**
     ```bash
@@ -63,41 +87,41 @@ Ensure you have the following installed on your system:
     cd ai-meeting-companion
     ```
 
-2.  **Install Server Dependencies**
-    Navigate to the server directory and install the necessary packages:
+2.  **Server Setup**
     ```bash
     cd server
     npm install
+    cp .env.example .env
+    # Configure your .env usage keys
+    npm start
     ```
 
-3.  **Install Client Dependencies**
-    Navigate to the client directory and install the frontend packages:
+3.  **Client Setup**
     ```bash
     cd ../client
     npm install
-    ```
-
-### Running the Application
-
-To run the full application, you will need to start both the backend server and the frontend client.
-
-1.  **Start the Backend Server**
-    In the `server` directory, run:
-    ```bash
-    npm start
-    ```
-    The server will start, typically on port 3000.
-
-2.  **Start the Frontend Client**
-    In the `client` directory, run:
-    ```bash
     npm run dev
     ```
-    The client development server will start.
 
-3.  **Access the Application**
-    Open your web browser and navigate to the URL provided by Vite (usually `http://localhost:5173`).
+4.  **Access App**
+    Open `http://localhost:6000` in your browser.
+
+## Deployment
+
+The application is fully containerized and ready for deployment.
+
+1.  **Build and Push**
+    Use the provided PowerShell script to build Docker images and push them to your registry.
+    ```powershell
+    .\build_and_push.ps1
+    ```
+
+2.  **Deploy on Server**
+    Copy `docker-compose.yml` and `cleanup_and_deploy.sh` to your remote server and run:
+    ```bash
+    ./cleanup_and_deploy.sh
+    ```
 
 ## License
 
-© 2025 AI Meeting Companion. All rights reserved.
+Copyright © 2025 AI Meeting Companion. All rights reserved.
