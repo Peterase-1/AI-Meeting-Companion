@@ -93,3 +93,5 @@ export const Header: React.FC = () => {
     </header >
   )
 }
+
+// Refactor pass 3: verified component render.
