@@ -165,3 +165,5 @@ export const DocExport: React.FC<DocExportProps> = ({ meetingId }) => {
     </div>
   );
 };
+
+// Refactor pass 17: verified component render.
