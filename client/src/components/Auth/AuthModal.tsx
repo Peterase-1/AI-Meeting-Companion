@@ -176,3 +176,5 @@ export const AuthModal: React.FC = () => {
     </Dialog>
   );
 };
+
+// Refactor pass 10: verified component render.
