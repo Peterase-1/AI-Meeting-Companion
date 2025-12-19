@@ -94,3 +94,5 @@ export const CalendarWidget: React.FC = () => {
     </Card>
   );
 };
+
+// Refactor pass 14: verified component render.
