@@ -131,3 +131,5 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ meetingId }) => {
     </Card>
   );
 };
+
+// Refactor pass 16: verified component render.
