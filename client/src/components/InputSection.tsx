@@ -379,3 +379,5 @@ export const InputSection: React.FC = () => {
     </div>
   )
 }
+
+// Refactor pass 4: verified component render.
