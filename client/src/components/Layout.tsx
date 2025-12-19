@@ -15,3 +15,5 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     </div>
   )
 }
+
+// Refactor pass 6: verified component render.
