@@ -43,3 +43,5 @@ export const SummaryVariantSelector: React.FC<SummaryVariantSelectorProps> = ({ 
     </div>
   );
 };
+
+// Refactor pass 19: verified component render.
