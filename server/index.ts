@@ -7,6 +7,8 @@ import dotenv from "dotenv";
 import { analyzeMeeting } from "./services/aiService";
 import authRoutes from "./routes/authRoutes";
 import meetingRoutes from "./routes/meetingRoutes";
+import passport from "passport";
+import { configurePassport } from "./services/passport";
 
 dotenv.config();
 
@@ -20,9 +22,12 @@ app.use(cors({
       "http://localhost:3000",
       "http://localhost:6000",
       "http://localhost:6001",
+      "http://35.94.16.120:6000",
+      "http://35.94.16.120:6001",
+      "https://35.94.16.120",
+      "https://35.94.16.120.nip.io",
       "http://54.188.110.106:6000",
-      "http://54.188.110.106:6001", // Remote Frontend on safe port
-      "https://ai-meeting-companion.onrender.com"
+      "http://54.188.110.106:6001" // Remote Frontend on safe port
     ];
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
@@ -37,6 +42,12 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Initialize Passport
+configurePassport();
+app.use(passport.initialize());
+
 app.use("/api/auth", authRoutes);
 app.use("/api/meetings", meetingRoutes);
 

@@ -17,7 +17,16 @@ function App() {
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    if (token && !user) {
+    // Check for token in URL (OAuth callback)
+    const params = new URLSearchParams(window.location.search);
+    const tokenParam = params.get('token');
+
+    if (tokenParam) {
+      localStorage.setItem('token', tokenParam);
+      // Remove token from URL for cleaner history
+      window.history.replaceState({}, document.title, window.location.pathname);
+      dispatch(loadUser());
+    } else if (token && !user) {
       dispatch(loadUser())
     }
   }, [token, user, dispatch])

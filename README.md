@@ -113,11 +113,11 @@ The application is fully containerized and ready for deployment.
 1.  **Build and Push**
     Use the provided PowerShell script to build Docker images and push them to your registry.
     ```powershell
-    .\build_and_push.ps1
+    .\scripts\build_and_push.ps1
     ```
 
 2.  **Deploy on Server**
-    Copy `docker-compose.yml` and `cleanup_and_deploy.sh` to your remote server and run:
+    Copy `docker-compose.yml` and `scripts/cleanup_and_deploy.sh` to your remote server and run:
     ```bash
     ./cleanup_and_deploy.sh
     ```

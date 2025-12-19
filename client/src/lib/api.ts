@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-export const API_BASE_URL = `${window.location.protocol}//${window.location.hostname}:7000`;
+export const API_BASE_URL = import.meta.env.DEV
+  ? "http://localhost:7000"
+  : ""; // In production (Nginx), we use relative paths. The proxy handles /api -> server:7000
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -20,28 +22,5 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
-
-export const initializeApi = async () => {
-  // Keep the logic if needed, but for now simple check might suffice or just rely on axios base url
-  // If dynamic URL switching is needed, we can update api.defaults.baseURL
-  const renderUrl = "https://ai-meeting-companion.onrender.com";
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3000);
-
-    const response = await fetch(renderUrl, {
-      method: 'GET',
-      signal: controller.signal
-    });
-    clearTimeout(timeoutId);
-
-    if (response.ok) {
-      api.defaults.baseURL = renderUrl;
-      console.log("Connected to Render Backend:", renderUrl);
-    }
-  } catch (error) {
-    console.warn("Using localhost fallback.");
-  }
-};
 
 export const getApiUrl = () => api.defaults.baseURL || API_BASE_URL;

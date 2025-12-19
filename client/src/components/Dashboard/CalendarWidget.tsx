@@ -1,62 +1,91 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Calendar as CalendarIcon, Clock, Users, Video } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Loader2, Calendar as CalendarIcon, ExternalLink } from "lucide-react";
+import { api } from '@/lib/api';
+import { format } from 'date-fns';
+
+interface CalendarEvent {
+  id: string;
+  summary: string;
+  start: { dateTime?: string; date?: string };
+  end: { dateTime?: string; date?: string };
+  htmlLink: string;
+}
 
 export const CalendarWidget: React.FC = () => {
-  const [isConnected, setIsConnected] = useState(false);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const upcomingMeetings = [
-    { id: 1, title: 'Weekly Team Sync', time: 'Tomorrow, 10:00 AM', attendees: 5, platform: 'Google Meet' },
-    { id: 2, title: 'Product Demo - Client X', time: 'Friday, 2:00 PM', attendees: 3, platform: 'Zoom' },
-    { id: 3, title: 'Q4 Strategy Planning', time: 'Mon, Oct 30, 11:00 AM', attendees: 8, platform: 'Teams' },
-  ];
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
-  return (
-    <Card className="w-full h-full mb-6 border-l-4 border-l-indigo-500 shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-xl flex items-center gap-2">
-            <CalendarIcon className="h-5 w-5 text-indigo-600" />
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get('/auth/calendar/events');
+      setEvents(res.data);
+      setError(null);
+    } catch (err: any) {
+      console.error(err);
+      setError("Connect your Google Account to see meetings.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (error) {
+    return (
+      <Card className="h-full">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CalendarIcon className="h-5 w-5" />
             Upcoming Meetings
           </CardTitle>
-          {!isConnected && (
-            <Button size="sm" variant="outline" onClick={() => setIsConnected(true)} className="text-xs h-7">
-              Connect Calendar
-            </Button>
-          )}
-          {isConnected && (
-            <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full font-medium">Connected</span>
-          )}
-        </div>
-        <CardDescription>
-          One-click start for your scheduled events.
-        </CardDescription>
+          <CardDescription>Integrate with Google Calendar</CardDescription>
+        </CardHeader>
+        <CardContent className="h-[200px] flex flex-col items-center justify-center text-center space-y-4">
+          <p className="text-sm text-muted-foreground">{error}</p>
+          <Button variant="outline" size="sm" onClick={() => window.location.href = `${import.meta.env.VITE_API_BASE_URL || "http://localhost:7000"}/api/auth/google`}>
+            Connect Google Calendar
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="h-full">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <CalendarIcon className="h-5 w-5" />
+          Upcoming Meetings
+        </CardTitle>
       </CardHeader>
-      <CardContent>
-        {!isConnected ? (
-          <div className="text-center py-6 bg-muted/20 rounded-lg border border-dashed">
-            <CalendarIcon className="h-10 w-10 text-muted-foreground mx-auto mb-2 opacity-50" />
-            <p className="text-sm text-muted-foreground mb-4">Connect Google/Outlook to see your schedule.</p>
-            <Button onClick={() => setIsConnected(true)} className="bg-white text-black border hover:bg-gray-100">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" className="h-4 w-4 mr-2" alt="Google" />
-              Sign in with Google
-            </Button>
+      <CardContent className="space-y-4">
+        {loading ? (
+          <div className="flex justify-center p-4">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
+        ) : events.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-4">No upcoming meetings found.</p>
         ) : (
           <div className="space-y-3">
-            {upcomingMeetings.map((mtg) => (
-              <div key={mtg.id} className="flex items-center justify-between p-3 bg-card hover:bg-accent/50 rounded-lg border transition-colors cursor-pointer group">
+            {events.map(event => (
+              <div key={event.id} className="flex items-start justify-between border-b pb-2 last:border-0 hover:bg-muted/50 p-2 rounded-md transition-colors">
                 <div className="space-y-1">
-                  <p className="font-semibold text-foreground group-hover:text-indigo-600 transition-colors">{mtg.title}</p>
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {mtg.time}</span>
-                    <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {mtg.attendees}</span>
-                  </div>
+                  <p className="font-medium text-sm line-clamp-1">{event.summary || "No Title"}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {event.start.dateTime
+                      ? format(new Date(event.start.dateTime), 'MMM d, h:mm a')
+                      : event.start.date}
+                  </p>
                 </div>
-                <Button size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity bg-indigo-600 hover:bg-indigo-700">
-                  <Video className="h-3 w-3 mr-1" /> Start
-                </Button>
+                <a href={event.htmlLink} target="_blank" rel="noreferrer" className="text-primary hover:text-primary/80">
+                  <ExternalLink className="h-4 w-4" />
+                </a>
               </div>
             ))}
           </div>
