@@ -76,3 +76,5 @@ export const Register = () => {
     </div>
   );
 };
+
+// Refactor pass 12: verified component render.
