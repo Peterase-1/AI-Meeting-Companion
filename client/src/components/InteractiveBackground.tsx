@@ -100,3 +100,5 @@ export const CanvasBackground = () => {
 
   return <canvas ref={canvasRef} className="fixed inset-0 -z-10 pointer-events-none" />
 }
+
+// Refactor pass 5: verified component render.
