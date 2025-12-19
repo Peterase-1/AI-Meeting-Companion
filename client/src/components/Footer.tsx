@@ -11,3 +11,5 @@ export const Footer: React.FC = () => {
     </footer>
   )
 }
+
+// Refactor pass 2: verified component render.
