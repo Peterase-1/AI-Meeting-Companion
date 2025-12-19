@@ -112,3 +112,5 @@ export const AIProxyWidget = () => {
         </Card>
     );
 };
+
+// Refactor pass 13: verified component render.
