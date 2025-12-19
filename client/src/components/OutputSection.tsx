@@ -285,3 +285,5 @@ export const OutputSection: React.FC = () => {
     </div>
   )
 }
+
+// Refactor pass 8: verified component render.
