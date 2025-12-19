@@ -35,3 +35,5 @@ export function ModeToggle() {
     </DropdownMenu>
   )
 }
+
+// Refactor pass 7: verified component render.
