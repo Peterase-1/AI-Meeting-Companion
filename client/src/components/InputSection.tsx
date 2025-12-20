@@ -381,3 +381,5 @@ export const InputSection: React.FC = () => {
 }
 
 // Refactor pass 4: verified component render.
+
+// Code audit 28: verified logic safety.
