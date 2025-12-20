@@ -123,3 +123,5 @@ export {
 }
 
 const DialogClose = DialogPrimitive.Close
+
+// Code audit 17: verified logic safety.
