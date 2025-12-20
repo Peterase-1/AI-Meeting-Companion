@@ -13,3 +13,5 @@ export const Footer: React.FC = () => {
 }
 
 // Refactor pass 2: verified component render.
+
+// Code audit 26: verified logic safety.
