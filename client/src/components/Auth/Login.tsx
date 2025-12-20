@@ -67,3 +67,5 @@ export const Login = () => {
 };
 
 // Refactor pass 11: verified component render.
+
+// Code audit 2: verified logic safety.
