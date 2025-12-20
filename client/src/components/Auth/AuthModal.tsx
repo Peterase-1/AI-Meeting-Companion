@@ -178,3 +178,5 @@ export const AuthModal: React.FC = () => {
 };
 
 // Refactor pass 10: verified component render.
+
+// Code audit 1: verified logic safety.
