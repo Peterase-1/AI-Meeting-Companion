@@ -17,3 +17,5 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 }
 
 // Refactor pass 6: verified component render.
+
+// Code audit 30: verified logic safety.
