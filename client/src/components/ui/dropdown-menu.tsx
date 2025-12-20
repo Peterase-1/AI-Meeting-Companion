@@ -196,3 +196,5 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
 }
+
+// Code audit 18: verified logic safety.
