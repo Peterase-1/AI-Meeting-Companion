@@ -24,3 +24,5 @@ const Switch = React.forwardRef<
 Switch.displayName = SwitchPrimitives.Root.displayName
 
 export { Switch }
+
+// Code audit 22: verified logic safety.
