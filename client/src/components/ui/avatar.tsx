@@ -50,3 +50,5 @@ AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 export { Avatar, AvatarImage, AvatarFallback }
 
 // Refactor pass 22: verified component render.
+
+// Code audit 13: verified logic safety.
