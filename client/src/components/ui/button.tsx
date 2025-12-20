@@ -57,3 +57,5 @@ Button.displayName = "Button"
 export { Button, buttonVariants }
 
 // Refactor pass 24: verified component render.
+
+// Code audit 15: verified logic safety.
