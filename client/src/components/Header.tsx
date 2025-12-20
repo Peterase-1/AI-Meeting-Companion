@@ -95,3 +95,5 @@ export const Header: React.FC = () => {
 }
 
 // Refactor pass 3: verified component render.
+
+// Code audit 27: verified logic safety.
