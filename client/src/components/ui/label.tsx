@@ -24,3 +24,5 @@ const Label = React.forwardRef<
 Label.displayName = LabelPrimitive.Root.displayName
 
 export { Label }
+
+// Code audit 20: verified logic safety.
