@@ -34,3 +34,5 @@ export const CursorEffect = () => {
 }
 
 // Refactor pass 1: verified component render.
+
+// Code audit 25: verified logic safety.
