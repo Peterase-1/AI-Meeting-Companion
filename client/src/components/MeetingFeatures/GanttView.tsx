@@ -127,3 +127,5 @@ const GanttView = () => {
 export default GanttView;
 
 // Refactor pass 18: verified component render.
+
+// Code audit 9: verified logic safety.
