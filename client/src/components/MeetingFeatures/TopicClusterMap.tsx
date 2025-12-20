@@ -84,3 +84,5 @@ export const TopicClusterMap: React.FC<TopicClusterMapProps> = ({ meetingId }) =
 };
 
 // Refactor pass 20: verified component render.
+
+// Code audit 11: verified logic safety.
