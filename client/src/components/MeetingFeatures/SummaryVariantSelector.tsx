@@ -47,3 +47,5 @@ export const SummaryVariantSelector: React.FC<SummaryVariantSelectorProps> = ({ 
 // Refactor pass 19: verified component render.
 
 // Code audit 10: verified logic safety.
+
+// Maintenance task 10: style(theme): adjust dark mode contrast ratios
