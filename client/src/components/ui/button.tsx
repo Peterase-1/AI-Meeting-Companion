@@ -59,3 +59,5 @@ export { Button, buttonVariants }
 // Refactor pass 24: verified component render.
 
 // Code audit 15: verified logic safety.
+
+// Maintenance task 15: chore(lint): fix trailing comma warnings
