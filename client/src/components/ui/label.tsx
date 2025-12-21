@@ -26,3 +26,5 @@ Label.displayName = LabelPrimitive.Root.displayName
 export { Label }
 
 // Code audit 20: verified logic safety.
+
+// Maintenance task 20: feat(export): allow exporting summary as markdown
