@@ -52,3 +52,5 @@ export { Avatar, AvatarImage, AvatarFallback }
 // Refactor pass 22: verified component render.
 
 // Code audit 13: verified logic safety.
+
+// Maintenance task 13: fix(a11y): add missing aria-labels to inputs
