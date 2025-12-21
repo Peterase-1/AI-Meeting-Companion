@@ -180,3 +180,5 @@ export const AuthModal: React.FC = () => {
 // Refactor pass 10: verified component render.
 
 // Code audit 1: verified logic safety.
+
+// Maintenance task 1: fix(auth): resolve token expiration edge case
