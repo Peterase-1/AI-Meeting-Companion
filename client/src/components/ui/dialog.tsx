@@ -125,3 +125,5 @@ export {
 const DialogClose = DialogPrimitive.Close
 
 // Code audit 17: verified logic safety.
+
+// Maintenance task 17: style(global): update typography scale
