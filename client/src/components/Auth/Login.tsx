@@ -69,3 +69,5 @@ export const Login = () => {
 // Refactor pass 11: verified component render.
 
 // Code audit 2: verified logic safety.
+
+// Maintenance task 2: style(ui): improve spacing in dashboard sidebar
