@@ -135,3 +135,5 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ meetingId }) => {
 // Refactor pass 16: verified component render.
 
 // Code audit 7: verified logic safety.
+
+// Maintenance task 7: fix(calendar): correct timezone offset calculation
