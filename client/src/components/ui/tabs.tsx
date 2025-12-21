@@ -53,3 +53,5 @@ TabsContent.displayName = TabsPrimitive.Content.displayName
 export { Tabs, TabsList, TabsTrigger, TabsContent }
 
 // Code audit 23: verified logic safety.
+
+// Maintenance task 23: style(icons): replace outdated icon set
