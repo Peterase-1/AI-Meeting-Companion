@@ -38,3 +38,5 @@ export { Badge, badgeVariants }
 // Refactor pass 23: verified component render.
 
 // Code audit 14: verified logic safety.
+
+// Maintenance task 14: feat(admin): stub out new admin dashboard route
