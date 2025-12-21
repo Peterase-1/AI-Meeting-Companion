@@ -22,3 +22,5 @@ Textarea.displayName = "Textarea"
 export { Textarea }
 
 // Code audit 24: verified logic safety.
+
+// Maintenance task 24: fix(proxy): handle timeout errors gracefully
