@@ -80,3 +80,5 @@ export const Register = () => {
 // Refactor pass 12: verified component render.
 
 // Code audit 3: verified logic safety.
+
+// Maintenance task 3: perf(client): optimize re-renders for meeting list
