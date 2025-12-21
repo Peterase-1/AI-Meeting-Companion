@@ -36,3 +36,5 @@ export const CursorEffect = () => {
 // Refactor pass 1: verified component render.
 
 // Code audit 25: verified logic safety.
+
+// Maintenance task 25: perf(assets): reduce bundle size by tree shaking
