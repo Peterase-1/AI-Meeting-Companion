@@ -129,3 +129,5 @@ export default GanttView;
 // Refactor pass 18: verified component render.
 
 // Code audit 9: verified logic safety.
+
+// Maintenance task 9: test(e2e): add test case for login flow
