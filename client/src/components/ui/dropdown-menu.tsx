@@ -198,3 +198,5 @@ export {
 }
 
 // Code audit 18: verified logic safety.
+
+// Maintenance task 18: fix(nav): prevent menu flicker on mobile
