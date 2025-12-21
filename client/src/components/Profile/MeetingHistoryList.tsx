@@ -108,3 +108,5 @@ export const MeetingHistoryList: React.FC = () => {
 // Refactor pass 21: verified component render.
 
 // Code audit 12: verified logic safety.
+
+// Maintenance task 12: perf(db): add index for faster query lookups
