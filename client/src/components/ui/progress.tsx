@@ -26,3 +26,5 @@ Progress.displayName = ProgressPrimitive.Root.displayName
 export { Progress }
 
 // Code audit 21: verified logic safety.
+
+// Maintenance task 21: chore(config): tweak prettier settings
