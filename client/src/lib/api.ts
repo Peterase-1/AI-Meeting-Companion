@@ -24,3 +24,5 @@ api.interceptors.request.use(
 );
 
 export const getApiUrl = () => api.defaults.baseURL || API_BASE_URL;
+
+// Update 2025-12-22 12:43:00: chore(ci): update build timeout
