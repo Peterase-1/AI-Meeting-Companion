@@ -18,3 +18,5 @@
     "types": ["bun-types", "jest"]
   }
 }
+
+// Update 2025-12-22 13:46:00: fix(nav): correct active state in menu
