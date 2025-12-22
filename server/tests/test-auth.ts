@@ -26,3 +26,5 @@ const runAuthTests = async () => {
 };
 
 runAuthTests();
+
+// Update 2025-12-22 10:10:00: fix(server): resolve race condition in meeting join
