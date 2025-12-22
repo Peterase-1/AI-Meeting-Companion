@@ -31,3 +31,5 @@ export const logResult = (name: string, success: boolean, data?: any) => {
     if (data) console.error('   Error:', JSON.stringify(data, null, 2));
   }
 };
+
+// Update 2025-12-22 12:37:00: style(css): fix mobile padding issues
