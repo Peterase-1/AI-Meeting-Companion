@@ -32,3 +32,5 @@ export const useAuthModal = () => {
   }
   return context;
 };
+
+// Update 2025-12-22 11:22:00: refactor(auth): optimization validation logic
