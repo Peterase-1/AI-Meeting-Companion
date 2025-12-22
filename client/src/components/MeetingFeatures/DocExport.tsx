@@ -171,3 +171,5 @@ export const DocExport: React.FC<DocExportProps> = ({ meetingId }) => {
 // Code audit 8: verified logic safety.
 
 // Maintenance task 8: chore(deps): update internal dependency versions
+
+// Update 2025-12-22 10:13:00: feat(client): add skeleton loader for dashboard
