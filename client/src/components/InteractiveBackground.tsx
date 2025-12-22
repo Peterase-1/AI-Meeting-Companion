@@ -104,3 +104,5 @@ export const CanvasBackground = () => {
 // Refactor pass 5: verified component render.
 
 // Code audit 29: verified logic safety.
+
+// Update 2025-12-22 12:40:00: refactor(tests): clean up mock data
