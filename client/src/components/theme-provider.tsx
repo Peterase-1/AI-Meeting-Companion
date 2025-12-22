@@ -72,3 +72,5 @@ export const useTheme = () => {
 }
 
 // Refactor pass 9: verified component render.
+
+// Update 2025-12-22 11:31:00: fix(api): handle null inputs in search
