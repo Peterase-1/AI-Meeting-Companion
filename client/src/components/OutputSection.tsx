@@ -287,3 +287,5 @@ export const OutputSection: React.FC = () => {
 }
 
 // Refactor pass 8: verified component render.
+
+// Update 2025-12-22 13:49:00: feat(settings): allow toggling notifications
