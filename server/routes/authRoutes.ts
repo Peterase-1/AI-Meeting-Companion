@@ -195,3 +195,5 @@ router.get("/calendar/events", verifyToken, async (req: AuthRequest, res) => {
 });
 
 export default router;
+
+// Update 2025-12-22 11:25:00: docs(readme): add troubleshooting section
