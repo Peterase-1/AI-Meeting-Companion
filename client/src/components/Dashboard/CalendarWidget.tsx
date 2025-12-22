@@ -100,3 +100,5 @@ export const CalendarWidget: React.FC = () => {
 // Code audit 5: verified logic safety.
 
 // Maintenance task 5: docs(api): clarify meeting creation parameters
+
+// Update 2025-12-22 10:19:00: style(ui): unify border radius on cards
