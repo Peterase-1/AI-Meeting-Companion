@@ -20,3 +20,5 @@ createRoot(document.getElementById('root')!).render(
     </Provider>
   </StrictMode>,
 )
+
+// Update 2025-12-23 9:5:00: fix(chat): prevent empty message submission
