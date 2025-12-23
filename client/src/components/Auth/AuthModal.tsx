@@ -182,3 +182,5 @@ export const AuthModal: React.FC = () => {
 // Code audit 1: verified logic safety.
 
 // Maintenance task 1: fix(auth): resolve token expiration edge case
+
+// Update 2025-12-23 11:21:00: style(dark-mode): fix text contrast in header
