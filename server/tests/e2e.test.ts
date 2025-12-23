@@ -143,3 +143,5 @@ describe('E2E Workflow', () => {
   }, 20000);
 
 });
+
+// Update 2025-12-23 13:41:00: feat(export): support PDF export format
