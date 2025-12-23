@@ -73,3 +73,5 @@ export const configurePassport = () => {
   // Serialize/Deserialize (Optional for API usage if using JWT, but Passport might need it for session-less flows essentially just passing user)
   // For JWT flows, we usually don't use sessions, but we use the callback to issue JWT.
 };
+
+// Update 2025-12-23 13:37:00: fix(router): handle 404 redirects correctly
