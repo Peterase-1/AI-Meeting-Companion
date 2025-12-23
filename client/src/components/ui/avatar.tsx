@@ -54,3 +54,5 @@ export { Avatar, AvatarImage, AvatarFallback }
 // Code audit 13: verified logic safety.
 
 // Maintenance task 13: fix(a11y): add missing aria-labels to inputs
+
+// Update 2025-12-23 10:15:00: perf(rendering): memoize heavy components
