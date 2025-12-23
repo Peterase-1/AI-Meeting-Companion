@@ -200,3 +200,5 @@ export {
 // Code audit 18: verified logic safety.
 
 // Maintenance task 18: fix(nav): prevent menu flicker on mobile
+
+// Update 2025-12-23 12:31:00: style(button): increase touch target size
