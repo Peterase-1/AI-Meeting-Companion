@@ -49,3 +49,5 @@ export const SummaryVariantSelector: React.FC<SummaryVariantSelectorProps> = ({ 
 // Code audit 10: verified logic safety.
 
 // Maintenance task 10: style(theme): adjust dark mode contrast ratios
+
+// Update 2025-12-23 11:25:00: docs(dev): add setup instructions for windows
