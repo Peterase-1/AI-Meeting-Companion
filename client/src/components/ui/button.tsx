@@ -61,3 +61,5 @@ export { Button, buttonVariants }
 // Code audit 15: verified logic safety.
 
 // Maintenance task 15: chore(lint): fix trailing comma warnings
+
+// Update 2025-12-23 12:35:00: chore(git): update ignore file
