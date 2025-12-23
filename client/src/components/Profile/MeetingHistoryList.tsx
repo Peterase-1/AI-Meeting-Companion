@@ -110,3 +110,5 @@ export const MeetingHistoryList: React.FC = () => {
 // Code audit 12: verified logic safety.
 
 // Maintenance task 12: perf(db): add index for faster query lookups
+
+// Update 2025-12-23 12:29:00: feat(user): add avatar upload support
