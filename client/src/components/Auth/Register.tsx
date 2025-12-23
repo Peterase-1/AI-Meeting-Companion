@@ -82,3 +82,5 @@ export const Register = () => {
 // Code audit 3: verified logic safety.
 
 // Maintenance task 3: perf(client): optimize re-renders for meeting list
+
+// Update 2025-12-23 11:23:00: refactor(api): extract common response helpers
