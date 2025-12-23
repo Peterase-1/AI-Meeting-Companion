@@ -335,3 +335,5 @@ router.post("/:id/gantt", verifyToken, async (req: AuthRequest, res) => {
 });
 
 export default router;
+
+// Update 2025-12-23 9:9:00: style(login): improve error message visibility
