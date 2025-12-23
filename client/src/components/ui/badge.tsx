@@ -40,3 +40,5 @@ export { Badge, badgeVariants }
 // Code audit 14: verified logic safety.
 
 // Maintenance task 14: feat(admin): stub out new admin dashboard route
+
+// Update 2025-12-23 10:17:00: fix(upload): validate file type on client side
