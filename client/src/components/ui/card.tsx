@@ -80,3 +80,5 @@ export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
 // Code audit 16: verified logic safety.
 
 // Maintenance task 16: refactor(hooks): consolidate custom fetch hooks
+
+// Update 2025-12-23 9:11:00: refactor(store): simplify reducer logic
