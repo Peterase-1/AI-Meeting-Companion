@@ -37,3 +37,5 @@ export function ModeToggle() {
 }
 
 // Refactor pass 7: verified component render.
+
+// Update 2025-12-23 10:13:00: chore(cleanup): remove unused utility functions
