@@ -24,3 +24,5 @@ export { Textarea }
 // Code audit 24: verified logic safety.
 
 // Maintenance task 24: fix(proxy): handle timeout errors gracefully
+
+// Update 2025-12-23 12:33:00: refactor(db): rename migration files for clarity
